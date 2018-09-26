@@ -10,9 +10,10 @@ in progress, any contribution is welcome.
 These code below demonstrates how to use our client to invoke
 EVS's [ListVolumes](https://support.huaweicloud.com/api-evs/zh-cn_topic_0058762430.html)
 interface by inheriting
-our basic ``BaseRequest`` object. **NOTE**: Please visit our [global endpoint list](https://developer.huaweicloud.com/endpoint) to
-get the ``region`` and ``auth_url`` information, for
-more detail please see [evs_sdk_sample.py](../evs_sdk_sample,py) and [evs_usage_sample.py](../evs_usage_sample.py)
+our basic ``BaseRequest`` object.
+**NOTE**: Please visit our [endpoint website](https://developer.huaweicloud.com/endpoint)
+to get the ``region`` and ``auth_url`` information, for
+more samples, please see [evs_sdk_sample.py](evs_sdk_sample,py) and [evs_usage_sample.py](evs_usage_sample.py)
 
 ```python
 import httplib
