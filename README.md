@@ -13,7 +13,7 @@ interface by inheriting
 our basic ``BaseRequest`` object.
 **NOTE**: Please visit our [endpoint website](https://developer.huaweicloud.com/endpoint)
 to get the ``region`` and ``auth_url`` information, for
-more samples, please see [evs_sdk_sample.py](evs_sdk_sample,py) and [evs_usage_sample.py](evs_usage_sample.py)
+more samples, please check [evs_sdk_sample.py](evs_sdk_sample.py) and [evs_usage_sample.py](evs_usage_sample.py)
 
 ```python
 import httplib
