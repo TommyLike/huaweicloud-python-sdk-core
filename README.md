@@ -1,4 +1,5 @@
-# Introduce
+# Introduce 
+[![Build Status](https://travis-ci.org/TommyLike/huaweicloud-python-sdk-core.svg?branch=master)](https://travis-ci.org/TommyLike/huaweicloud-python-sdk-core)
 
 This is the base library for HuaweiCloud python SDK, it provides the
 basic logic to authorize, locate endpoint and perform low level API
