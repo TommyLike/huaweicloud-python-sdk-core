@@ -9,17 +9,17 @@ in progress, any contribution is welcome.
 
 Install via pip:
 
-.. code-block:: sh
-
+```shell
     $ pip install huaweicloud-python-sdk-core
+```
 
 Install via github source code.
 
-.. code-block:: sh
-
+```shell
     $ git clone https://github.com/TommyLike/huaweicloud-python-sdk-core.git
     $ cd huaweicloud-python-sdk-core
     $ python setup.py install
+```
 
 # Usage
 
