@@ -96,11 +96,21 @@ class DeleteVolumeRequest(EvsRequest):
 if __name__ == "__main__":
 
     # Initialize the client
+    # demo_client = client.Client(
+    #     auth_url='https://iam.cn-north-1.myhwclouds.com:443/v3',
+    #     credential=credential.AccessKeyCredential(
+    #         access_key_id=os.environ['access_key_id'],
+    #         access_key_secret=os.environ['access_key_secret']
+    #     ),
+    #     region='cn-north-1')
+
     demo_client = client.Client(
         auth_url='https://iam.cn-north-1.myhwclouds.com:443/v3',
-        credential=credential.AccessKeyCredential(
-            access_key_id=os.environ['access_key_id'],
-            access_key_secret=os.environ['access_key_secret']
+        credential=credential.PasswordCredential(
+            username=os.environ['username'],
+            password=os.environ['password'],
+            domain=os.environ['domain'],
+            project='cn-north-1'
         ),
         region='cn-north-1')
 
@@ -116,7 +126,7 @@ if __name__ == "__main__":
         create_volume.Name = "this is the updated name."
         create_volume.Description = "this is the updated description."
 
-        code, volume = demo_client.handle_request(req=create_volume)
+        code, volume, headers = demo_client.handle_request(req=create_volume)
 
         print(volume)
 
@@ -124,8 +134,8 @@ if __name__ == "__main__":
 
         # Show volume detail
         while volume_obj['volume']['status'] != 'available':
-            code, volume = demo_client.handle_request(req=ShowVolumeRequest(
-                volume_obj['volume']['id']))
+            code, volume, headers = demo_client.handle_request(req=
+            ShowVolumeRequest(volume_obj['volume']['id']))
             print(volume)
             time.sleep(1)
             volume_obj = json.loads(volume)
