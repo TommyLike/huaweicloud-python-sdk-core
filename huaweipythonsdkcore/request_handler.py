@@ -59,4 +59,4 @@ class RequestHandler(object):
             if response.status_code != expected_code:
                 raise exception.HttpResponseException(
                     response.text, response.status_code, expected_code)
-        return response.text
+        return response.status_code, response.text

@@ -1,13 +1,19 @@
 import httplib
+import os
+import json
+import time
 
 from huaweipythonsdkcore import request
+from huaweipythonsdkcore import credential
+from huaweipythonsdkcore import client
+from huaweipythonsdkcore import exception
 
 
 class EvsRequest(request.BaseRequest):
 
     _service = 'evs'
 
-    _user_agent = 'huawei-python-sdk/1.0.1'
+    _user_agent = 'huawei-python-sdk/0.0.1'
 
 
 class CreateVolumeRequest(EvsRequest):
@@ -85,4 +91,48 @@ class DeleteVolumeRequest(EvsRequest):
         self._base_endpoint = self._base_endpoint.replace("{volume_id}",
                                                           volume_id)
         super(DeleteVolumeRequest, self).__init__()
+
+
+if __name__ == "__main__":
+
+    # Initialize the client
+    demo_client = client.Client(
+        auth_url='https://iam.cn-north-1.myhwclouds.com:443/v3',
+        credential=credential.AccessKeyCredential(
+            access_key_id=os.environ['access_key_id'],
+            access_key_secret=os.environ['access_key_secret']
+        ),
+        region='cn-north-1')
+
+    try:
+        # Create a volume
+        create_volume = CreateVolumeRequest(
+            name="this is created from huawei sdk core",
+            description="this is the description",
+            size=2,
+            volume_type="SATA"
+        )
+
+        create_volume.Name = "this is the updated name."
+        create_volume.Description = "this is the updated description."
+
+        code, volume = demo_client.handle_request(req=create_volume)
+
+        print(volume)
+
+        volume_obj = json.loads(volume)
+
+        # Show volume detail
+        while volume_obj['volume']['status'] != 'available':
+            code, volume = demo_client.handle_request(req=ShowVolumeRequest(
+                volume_obj['volume']['id']))
+            print(volume)
+            time.sleep(1)
+            volume_obj = json.loads(volume)
+
+        # Delete volume
+        print(demo_client.handle_request(req=DeleteVolumeRequest(
+            volume_obj['volume']['id'])))
+    except exception.SDKException as err:
+        print(err)
 
