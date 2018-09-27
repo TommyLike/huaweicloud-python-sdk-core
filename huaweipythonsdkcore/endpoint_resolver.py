@@ -81,7 +81,7 @@ class HttpEndpointResolver(EndpointResolver):
     def _assemble_endpoint_with_tenant(self, tenant, endpoint):
         project_request = ProjectRequest()
         project_request.url_params = {'name': tenant}
-        result = self._do_request(project_request)
+        result = self._do_request(project_request)[1]
         projects = json.loads(result)
         project_ids = [p['id'] for p in projects['projects']]
         return endpoint.replace(self.TENANT_REGEX, project_ids[0])
@@ -89,7 +89,7 @@ class HttpEndpointResolver(EndpointResolver):
     def _resolve(self, req, region, tenant=None):
         # Collect service id from services response
         service_request = ServiceRequest()
-        result = self._do_request(service_request)
+        result = self._do_request(service_request)[1]
         services = json.loads(result)
         service = [sv['id'] for sv in services['services']
                    if sv['name'] == req.service]
@@ -99,16 +99,21 @@ class HttpEndpointResolver(EndpointResolver):
 
         # Collect endpoint(s) via service id
         endpoint_request = EndpointRequest()
-        result = self._do_request(endpoint_request)
+        result = self._do_request(endpoint_request)[1]
         endpoints = json.loads(result)
         endpoint = [ep['url'] for ep in endpoints['endpoints']
                     if (ep['interface'] == req.interface
                         and ep['service_id'] in service
                         and ('region' in ep and ep['region'] == region))]
 
-        if len(endpoint) == 0 or len(endpoint) >= 2:
+        if len(endpoint) == 0:
+
             raise exception.EndpointResolveException(
-                "Multiple legal endpoints are founded.")
+                "Not any legal endpoint is founded with region %s." % region)
+        if len(endpoint) >= 2:
+            raise exception.EndpointResolveException(
+                "Multiple legal endpoints are founded: %s "
+                "with region %s." % (','.join(endpoint), region))
         # Convert path template into real one,
         # for example: 'http://host/server/$(tenant_id)s'
         request_endpoint = endpoint[0]

@@ -1,2 +1,5 @@
 *.pyc
 .idea/*
+dist/*
+*.egg-info
+*_sample.py
