@@ -60,4 +60,3 @@ class RequestHandler(object):
                 raise exception.HttpResponseException(
                     response.text, response.status_code, expected_code)
         return response.status_code, response.text, response.headers
-
