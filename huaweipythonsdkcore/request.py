@@ -17,9 +17,9 @@ import httplib
 
 
 class BaseRequest(object):
-    """
-    Base request class. This class includes all required elements regarding
-    HTTP request.
+    """Base request class.
+
+    This class includes all required elements regarding HTTP request.
     """
 
     # Name of service that the request belongs to.

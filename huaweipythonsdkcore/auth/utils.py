@@ -18,8 +18,8 @@ import sys
 
 
 def get_utf8_bytes(message):
-    """
-    Get the bytes array encoded by utf-8
+    """Get the bytes array encoded by utf-8.
+
     :param message: the string of message
     :type message: string
     """

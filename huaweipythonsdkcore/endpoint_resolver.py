@@ -91,10 +91,11 @@ class HttpEndpointResolver(EndpointResolver, base_client.BaseClient):
         full_path = utils.get_request_endpoint(endpoint_request, self.auth_url)
         _, result, _ = self._do_request(endpoint_request, full_path)
         endpoints = json.loads(result)
-        endpoint = [ep['url'] for ep in endpoints['endpoints']
-                    if (ep['interface'] == req.interface
-                        and ep['service_id'] in service
-                        and ('region' in ep and ep['region'] == region))]
+        endpoint = [
+            ep['url'] for ep in endpoints['endpoints']
+            if (ep['interface'] == req.interface and ep[
+                'service_id'] in service and (
+                    'region' in ep and ep['region'] == region))]
 
         if len(endpoint) == 0:
             raise exception.EndpointResolveException(

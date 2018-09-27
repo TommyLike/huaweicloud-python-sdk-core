@@ -97,8 +97,7 @@ class AKSKAuthenticator(Authenticator):
                                      request_date,
                                      self.region,
                                      svr,
-                                     TERMINATORSTRING
-                                     ])
+                                     TERMINATORSTRING])
         hashed_request = hashlib.sha256(
             sign_util.get_utf8_bytes(canonical_req)).hexdigest()
         return "\n".join([self.digester.algorithm_name, request_datetime,

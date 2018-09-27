@@ -18,9 +18,9 @@ from abc import ABCMeta, abstractmethod
 
 
 class Authenticator(object):
-    """
-    Base authenticator class. It's used to auth authorized header when perform
-    requests.
+    """Base authenticator class.
+
+    It's used to auth authorized header when perform requests.
     """
     __metaclass__ = ABCMeta
     _re_auth = False
