@@ -77,7 +77,7 @@ def retry(exceptions, interval=1, retries=3, backoff_rate=2,
         return wait_val
 
     def _print_stop(previous_attempt_number, delay_since_first_attempt_ms):
-        delay_since_first_attempt = delay_since_first_attempt_ms / 1000.0
+        # delay_since_first_attempt = delay_since_first_attempt_ms / 1000.0
         # "Failed attempt %s" % previous_attempt_number
         # "Have been at this for %s seconds" % delay_since_first_attempt
         return previous_attempt_number == retries

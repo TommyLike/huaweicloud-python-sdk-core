@@ -78,7 +78,7 @@ class AKSKAuthenticator(Authenticator):
         canonical_header = [
             k.lower() + ':' + headers.get(k).strip() for
             k in self.headtosign] if all(
-            [headers.has_key(k) for k in self.headtosign]) else []
+            [k in headers for k in self.headtosign]) else []
         canonical_header = '\n'.join(canonical_header)
         canonical_header += '\n'
         signed_header = ';'.join([k.lower() for k in self.headtosign])
@@ -100,7 +100,7 @@ class AKSKAuthenticator(Authenticator):
         hashed_request = hashlib.sha256(
             sign_util.get_utf8_bytes(canonical_req)).hexdigest()
         return "\n".join([self.digester.algorithm_name, request_datetime,
-                          credential_scope, hashed_request]),credential_scope
+                          credential_scope, hashed_request]), credential_scope
 
     def _make_signing_key(self, dtstamp, svr):
         """
