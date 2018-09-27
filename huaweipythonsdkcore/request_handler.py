@@ -14,7 +14,6 @@
 #    under the License.
 
 import requests
-
 from huaweipythonsdkcore import exception
 from huaweipythonsdkcore import utils
 

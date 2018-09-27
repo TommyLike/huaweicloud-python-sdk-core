@@ -14,8 +14,8 @@
 #    under the License.
 
 import httplib
-import requests
 
+import requests
 from huaweipythonsdkcore import exception
 from huaweipythonsdkcore import request_handler
 from huaweipythonsdkcore import utils

@@ -14,9 +14,11 @@
 #    under the License.
 
 import datetime
-import retrying
 import random
+
+import retrying
 import six
+
 try:
     from urllib.parse import urlparse
 except ImportError:

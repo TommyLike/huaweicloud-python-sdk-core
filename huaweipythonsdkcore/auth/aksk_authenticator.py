@@ -14,9 +14,10 @@
 #    under the License.
 
 import hashlib
-import urllib
 import json
+import urllib
 
+import six
 from huaweipythonsdkcore.auth.authenticator import Authenticator
 from huaweipythonsdkcore.auth import digester
 from huaweipythonsdkcore.auth import utils as sign_util
@@ -64,7 +65,8 @@ class AKSKAuthenticator(Authenticator):
         if params:
             result = []
             for k, vs in list(params.items()):
-                if isinstance(vs, basestring) or not hasattr(vs, '__iter__'):
+                if (isinstance(vs, six.string_types) or
+                        not hasattr(vs, '__iter__')):
                     vs = [vs]
                 for v in vs:
                     if v is not None:
