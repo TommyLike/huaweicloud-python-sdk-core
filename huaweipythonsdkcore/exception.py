@@ -65,3 +65,12 @@ class RequestException(SDKException):
                   "endpoint, could be a low level error: {}.".format(message)
         super(RequestException, self).__init__(code=None,
                                                message=message)
+
+
+class AuthException(SDKException):
+
+    def __init__(self, message, credential):
+        message = "Failed to authorize with provided " \
+                  "information {}, message: {}.".format(credential, message)
+        super(AuthException, self).__init__(code=None,
+                                            message=message)

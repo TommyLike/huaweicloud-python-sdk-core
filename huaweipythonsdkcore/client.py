@@ -13,17 +13,15 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import requests
-
 from huaweipythonsdkcore import request as request
-from huaweipythonsdkcore.sign import factory as sign_util
+from huaweipythonsdkcore.auth import factory as sign_util
 from huaweipythonsdkcore import utils
-from huaweipythonsdkcore import request_handler
 from huaweipythonsdkcore import endpoint_resolver
 from huaweipythonsdkcore import exception
+from huaweipythonsdkcore import base_client
 
 
-class Client(object):
+class Client(base_client.BaseClient):
 
     def __init__(self, auth_url=None, credential=None, region=None,
                  tenant=None):
@@ -33,34 +31,28 @@ class Client(object):
         # NOTE(tommylikehu): In most of the cases, the tenant would be equal
         # to region, therefore, we set it to region if parameter not provided.
         self.tenant = tenant if tenant else region
-        self.signer = sign_util.get_signer(cred=credential, region=region)
-        self.resolver = endpoint_resolver.HttpEndpointResolver(self.auth_url,
-                                                               self.signer)
-        self.handler = request_handler.RequestHandler.get_instance()
-
-    def _do_request(self, req, endpoint):
-
-        try:
-            full_path = utils.get_request_endpoint(req, endpoint)
-            headers = utils.collect_complete_headers(full_path, req)
-
-            headers = self.signer.sign(
-                full_path, req.http_method, headers,
-                body=req.body, params=req.url_params, service=req.service)
-            return self.handler.handle_request(path=full_path,
-                                               method=req.http_method,
-                                               headers=headers,
-                                               url_params=req.url_params,
-                                               body=req.body,
-                                               timeout=req.timeout,
-                                               expected_code=req.success_code)
-        except requests.exceptions.RequestException as err:
-            raise exception.RequestException(err.message)
+        self.authenticator = sign_util.get_authenticator(
+            cred=credential,
+            region=region,
+            auth_url=self.auth_url)
+        self.resolver = endpoint_resolver.HttpEndpointResolver(
+            self.auth_url,
+            self.authenticator)
+        super(Client, self).__init__(authenticator=self.authenticator)
 
     def handle_request(self, req):
+        """Perform http request with supplied Request object
+
+        :param req: Request object, is a instance of BaseRequest.
+        :return: Response tuple, (code, content).
+        :raise: SDKException: All of the exceptional cases are wrapped
+                              in SDKException.
+        """
+
         if not isinstance(req, request.BaseRequest):
             raise exception.ValueException(
                 "request must be an instance of 'BaseRequest'.")
         # Get service endpoint from endpoint resolver
         endpoint = self.resolver.resolve(req, self.region, self.tenant)
-        return self._do_request(req, endpoint)
+        full_path = utils.get_request_endpoint(req, endpoint)
+        return self._do_request(req, full_path)

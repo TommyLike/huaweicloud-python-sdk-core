@@ -17,13 +17,23 @@
 from abc import ABCMeta, abstractmethod
 
 
-class Signer(object):
+class Authenticator(object):
     """
-    Base signer class. It's used to authorize when perform requests.
+    Base authenticator class. It's used to auth authorized header when perform
+    requests.
     """
     __metaclass__ = ABCMeta
+    _re_auth = False
 
     @abstractmethod
-    def sign(self, url=None, method=None, headers=None,
+    def auth(self, url=None, method=None, headers=None,
              body=None, params=None, service=None):
         pass
+
+    @property
+    def support_re_auth(self):
+        return self._re_auth
+
+    def re_auth(self, url=None, method=None, headers=None,
+                body=None, params=None, service=None):
+        return self.auth(url, method, headers, body, params, service)

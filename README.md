@@ -5,16 +5,33 @@ basic logic to authorize, locate endpoint and perform low level API
 requests, it's not for any standalone usage, although we are working
 in progress, any contribution is welcome.
 
+# Install
+
+Install via pip:
+
+.. code-block:: sh
+
+    $ pip install huaweicloud-python-sdk-core
+
+Install via github source code.
+
+.. code-block:: sh
+
+    $ git clone https://github.com/TommyLike/huaweicloud-python-sdk-core.git
+    $ cd huaweicloud-python-sdk-core
+    $ python setup.py install
+
 # Usage
 
 These code below demonstrates how to use our client to invoke
 EVS's [ListVolumes](https://support.huaweicloud.com/api-evs/zh-cn_topic_0058762430.html)
 interface by inheriting
 our basic ``BaseRequest`` object.
-**NOTE**: Please visit our [endpoint website](https://developer.huaweicloud.com/endpoint)
+**NOTE**: Please visit our [Official Endpoints](https://developer.huaweicloud.com/endpoint)
 to get the ``region`` and ``auth_url`` information, for
 more samples, please check [evs_sample.py](samples/evs_sample.py)
 
+## Define service API specific Request
 ```python
 import httplib
 
@@ -29,19 +46,46 @@ class ListVolumesRequest(request.BaseRequest):
 
     _http_method = 'GET'
 
+    _success_codes = [httplib.OK]
+
     _user_agent = 'huawei-python-sdk/1.0.1'
+```
+## Initialize client
+We both support AK/SK and username/password credentials currently, use
+```python
 
-
-# Initialize client
 demo_client = client.Client(
-    auth_url=<iam-endpoint-list> # for example, 'https://iam.cn-north-1.myhwclouds.com:443/v3',
+    auth_url=<iam-endpoint-url> # for example, 'https://iam.cn-north-1.myhwclouds.com:443/v3',
     credential=credential.AccessKeyCredential(
         access_key_id=<access_key>,
         access_key_secret=<access_secret>
     ),
     region=<region-id>)
+```
+or
+```python
+
+ demo_client = client.Client(
+         auth_url='https://iam.cn-north-1.myhwclouds.com:443/v3',
+         credential=credential.PasswordCredential(
+             username=<username>,
+             password=<password>,
+             domain=<domain>,
+             project=<project> #in most of the cases it's equal to region
+         ),
+        region=<region-id>)
+```
+## Use client to invoke API via Request instance.
+```python
 
 # Query available volumes
 demo_client.handle_request(req=ListVolumesRequest())
-
 ```
+
+## Wrap content with Response Object
+Client only returns the raw API content in the format of tuple:
+
+    (int_respond_code, string_respond_content, dict_respond_header)
+
+It's better to deserialize them into Response object for better usage experience.
+
