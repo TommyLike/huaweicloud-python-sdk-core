@@ -21,6 +21,7 @@ from huaweipythonsdkcore import request
 from huaweipythonsdkcore import request_handler
 from huaweipythonsdkcore import utils
 from huaweipythonsdkcore import exception
+from huaweipythonsdkcore import base_client
 
 
 class EndpointResolver(object):
@@ -52,36 +53,23 @@ class ProjectRequest(AuthenticationRequest):
     _success_codes = httplib.OK
 
 
-class HttpEndpointResolver(EndpointResolver):
+class HttpEndpointResolver(EndpointResolver, base_client.BaseClient):
 
     TENANT_REGEX = '$(tenant_id)s'
 
-    def __init__(self, auth_url, signer):
+    def __init__(self, auth_url, authenticator):
         self.auth_url = auth_url
         self.handler = request_handler.RequestHandler.get_instance()
-        self.signer = signer
+        self.authenticator = authenticator
         self._endpoint_cache = {}
-
-    def _do_request(self, req):
-
-        full_path = utils.get_request_endpoint(req, self.auth_url)
-        headers = utils.collect_complete_headers(full_path, req)
-
-        headers = self.signer.sign(
-            full_path, req.http_method, headers,
-            body=req.body, params=req.url_params, service=req.service)
-        return self.handler.handle_request(path=full_path,
-                                           method=req.http_method,
-                                           headers=headers,
-                                           url_params=req.url_params,
-                                           body=req.body,
-                                           timeout=req.timeout,
-                                           expected_code=req.success_code)
+        super(HttpEndpointResolver, self).__init__(
+            authenticator=self.authenticator)
 
     def _assemble_endpoint_with_tenant(self, tenant, endpoint):
         project_request = ProjectRequest()
         project_request.url_params = {'name': tenant}
-        result = self._do_request(project_request)[1]
+        full_path = utils.get_request_endpoint(project_request, self.auth_url)
+        _, result, _ = self._do_request(project_request, full_path)
         projects = json.loads(result)
         project_ids = [p['id'] for p in projects['projects']]
         return endpoint.replace(self.TENANT_REGEX, project_ids[0])
@@ -89,7 +77,8 @@ class HttpEndpointResolver(EndpointResolver):
     def _resolve(self, req, region, tenant=None):
         # Collect service id from services response
         service_request = ServiceRequest()
-        result = self._do_request(service_request)[1]
+        full_path = utils.get_request_endpoint(service_request, self.auth_url)
+        _, result, _ = self._do_request(service_request, full_path)
         services = json.loads(result)
         service = [sv['id'] for sv in services['services']
                    if sv['name'] == req.service]
@@ -99,7 +88,8 @@ class HttpEndpointResolver(EndpointResolver):
 
         # Collect endpoint(s) via service id
         endpoint_request = EndpointRequest()
-        result = self._do_request(endpoint_request)[1]
+        full_path = utils.get_request_endpoint(endpoint_request, self.auth_url)
+        _, result, _ = self._do_request(endpoint_request, full_path)
         endpoints = json.loads(result)
         endpoint = [ep['url'] for ep in endpoints['endpoints']
                     if (ep['interface'] == req.interface
@@ -107,7 +97,6 @@ class HttpEndpointResolver(EndpointResolver):
                         and ('region' in ep and ep['region'] == region))]
 
         if len(endpoint) == 0:
-
             raise exception.EndpointResolveException(
                 "Not any legal endpoint is founded with region %s." % region)
         if len(endpoint) >= 2:
@@ -125,7 +114,7 @@ class HttpEndpointResolver(EndpointResolver):
     def resolve(self, req, region, tenant=None):
         endpoint_key = "{}/{}/{}/{}".format(region, tenant,
                                             req.service, req.interface)
-        if not self._endpoint_cache.has_key(endpoint_key):
+        if endpoint_key not in self._endpoint_cache:
             self._endpoint_cache[endpoint_key] = self._resolve(req, region,
                                                                tenant)
         return self._endpoint_cache[endpoint_key]

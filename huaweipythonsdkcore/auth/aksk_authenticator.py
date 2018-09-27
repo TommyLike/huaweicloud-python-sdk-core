@@ -17,17 +17,18 @@ import hashlib
 import urllib
 import json
 
-from huaweipythonsdkcore.sign.signer import Signer
-from huaweipythonsdkcore.sign import digester
-from huaweipythonsdkcore.sign import utils as sign_util
+from huaweipythonsdkcore.auth.authenticator import Authenticator
+from huaweipythonsdkcore.auth import digester
+from huaweipythonsdkcore.auth import utils as sign_util
 from huaweipythonsdkcore import utils
 
 TERMINATORSTRING = "sdk_request"
 
 
-class AKSKSigner(Signer):
+class AKSKAuthenticator(Authenticator):
 
     SIGN_HEADER = 'Authorization'
+    _re_auth = False
 
     def __init__(self, access_key=None, secret_key=None, region=None):
         self.ak = access_key
@@ -122,7 +123,7 @@ class AKSKSigner(Signer):
         return self.digester.get_digest(
             kservice, sign_util.get_utf8_bytes(TERMINATORSTRING))
 
-    def sign(self, url=None, method=None, headers=None, body=None, params=None,
+    def auth(self, url=None, method=None, headers=None, body=None, params=None,
              service=None):
         canonical_request = self._make_canonical_request(method=method,
                                                          url=url,

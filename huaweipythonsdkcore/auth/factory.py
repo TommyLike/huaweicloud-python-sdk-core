@@ -14,13 +14,23 @@
 #    under the License.
 
 from huaweipythonsdkcore import credential
-from huaweipythonsdkcore.sign import aksk_signer
+from huaweipythonsdkcore.auth import aksk_authenticator
+from huaweipythonsdkcore.auth import pwd_authenticator
 
 
-def get_signer(cred, region):
+def get_authenticator(cred, region, auth_url):
+
     if isinstance(cred, credential.AccessKeyCredential):
-        return aksk_signer.AKSKSigner(access_key=cred.access_key_id,
-                                      secret_key=cred.access_key_secret,
-                                      region=region)
+        return aksk_authenticator.AKSKAuthenticator(
+            access_key=cred.access_key_id,
+            secret_key=cred.access_key_secret,
+            region=region)
+    elif isinstance(cred, credential.PasswordCredential):
+        return pwd_authenticator.PwdAuthenticator(username=cred.username,
+                                                  password=cred.password,
+                                                  domain=cred.domain,
+                                                  project=cred.project,
+                                                  auth_url=auth_url)
+
     else:
         raise Exception("Unrecognized credential type: %s." % cred.__class__)
