@@ -22,7 +22,7 @@ class SDKException(Exception):
 
     def __str__(self):
         return "[SDKException] Message:%s Code:%s ." % (self.message,
-                                                       self.code)
+                                                        self.code)
 
     @property
     def code(self):
