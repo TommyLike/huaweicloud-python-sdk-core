@@ -39,6 +39,6 @@ jobs:
         - python setup.py sdist
       deploy:
         provider: releases
-        api_key: ea2041dc28b324ae90ac966ea933c633aad8c6ec
+        api_key: 23213457abab4ba6fb24aac98773c5d17cf6233d
         skip_cleanup: true
         file: dist/*.tar.gz
