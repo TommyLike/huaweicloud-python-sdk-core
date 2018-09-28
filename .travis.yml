@@ -11,6 +11,7 @@ install:
 branches:
   only:
     - master
+
 jobs:
   include:
     - stage: lint checks
