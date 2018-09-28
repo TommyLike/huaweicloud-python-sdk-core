@@ -93,11 +93,8 @@ class AKSKAuthenticator(Authenticator):
     def _make_string_to_sign(self, canonical_req, dtstamp, svr):
         request_datetime = dtstamp
         request_date = dtstamp.split('T')[0]
-        credential_scope = '/'.join([
-                                     request_date,
-                                     self.region,
-                                     svr,
-                                     TERMINATORSTRING])
+        credential_scope = '/'.join(
+            [request_date, self.region, svr, TERMINATORSTRING])
         hashed_request = hashlib.sha256(
             sign_util.get_utf8_bytes(canonical_req)).hexdigest()
         return "\n".join([self.digester.algorithm_name, request_datetime,
