@@ -12,6 +12,9 @@ branches:
   only:
     - master
 
+virtualenv:
+  system_site_packages: true
+
 jobs:
   include:
     - stage: lint checks
@@ -32,11 +35,12 @@ jobs:
       python:
         - 2.7
         - 3.4
-    - stage: build and publish release
+    - stage: build package
       script: 
-        - echo publishing
-      before_deploy:        
-        - python setup.py sdist
+        - python setup.py sdist      
+    - stage: publish
+      script:
+        - echo Uploading.
       deploy:
         provider: releases
         api_key: $GITHUB_TOKEN
