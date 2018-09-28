@@ -35,14 +35,14 @@ jobs:
       python:
         - 2.7
         - 3.4
-    - stage: build package
-      script: 
-        - python setup.py sdist      
-    - stage: publish
+    -stage: build and publish release
       script:
-        - echo Uploading.
-      deploy:
+        - echo publishing
+      before_deploy:
+        - python setup.py sdist        
+      deploy:        
         provider: releases
+        file_glob: true
         api_key: $GITHUB_TOKEN
-        skip_cleanup: true
+        skip_cleanup: true	
         file: dist/*.tar.gz
