@@ -3,18 +3,21 @@
 """
 distutils/setuptools install script.
 """
-import os
+import io
+from os import path
 from setuptools import setup, find_packages
 
 import huaweipythonsdkcore
 
-ROOT = os.path.dirname(__file__)
+root_directory = path.abspath(path.dirname(__file__))
+with io.open(path.join(root_directory, 'README.md'), encoding='utf-8') as f:
+    long_description = f.read()
 
 setup(
     name='huaweicloud-python-sdk-core',
     version=huaweipythonsdkcore.__version__,
     description='HuaweiCloud Python SDK Core',
-    long_description="",
+    long_description=long_description,
     author='Huawei Cloud',
     url='https://github.com/huaweicloud/huaweicloud-python-sdk-core',
     maintainer_email="support@huaweicloud.com",
