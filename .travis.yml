@@ -33,6 +33,8 @@ jobs:
         - 2.7
         - 3.4
     - stage: build and publish release
+      script: 
+        - echo publishing
       before_deploy:
         script:
           - python setup.py sdist
