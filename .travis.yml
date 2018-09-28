@@ -47,3 +47,6 @@ matrix:
       api_key: $GITHUB_TOKEN
       skip_cleanup: true
       file: dist/*.tar.gz
+      on:
+        tag: true
+
