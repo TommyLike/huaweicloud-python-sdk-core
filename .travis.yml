@@ -32,15 +32,12 @@ jobs:
       python:
         - 2.7
         - 3.4
-    - stage: build package file
-      script:
-        - python setup.py sdist
-    - stage: publish release
-      script: echo publishing...
+    - stage: build and publish release
+      before_deploy:
+        script:
+          - python setup.py sdist
       deploy:
         provider: releases
         api_key: ea2041dc28b324ae90ac966ea933c633aad8c6ec
         skip_cleanup: true
         file: dist/*.tar.gz
-        on:
-          tags: true
