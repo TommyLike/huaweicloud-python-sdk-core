@@ -2,9 +2,6 @@ sudo: false
 
 language: python
 
-python:
-  - 3.4
-
 install:
   - pip install -r test-requirements.txt
 
@@ -12,37 +9,41 @@ branches:
   only:
     - master
 
-virtualenv:
-  system_site_packages: true
-
-jobs:
+matrix:
   include:
-    - stage: lint checks
-      script:
-        - tox -e flake8
-      python:
-        - 2.7
-        - 3.4
-    - stage: unit tests
-      script:
-        - echo skipped
-      python:
-        - 2.7
-        - 3.4
-    - stage: functional tests
-      script:
-        - echo skipped
-      python:
-        - 2.7
-        - 3.4
-    - stage: build and publish release
-      script:
-        - echo publishing
-      before_deploy:
-        - python setup.py sdist        
-      deploy:        
-        provider: releases
-        file_glob: true
-        api_key: $GITHUB_TOKEN
-        skip_cleanup: true	
-        file: dist/*.tar.gz
+  - name: "2.7 Lint checks"
+    python: "2.7"
+    script:
+      - tox -e flake8
+  - name: "3.4 Lint checks"
+    python: "3.4"
+    script:
+      - tox -e flake8
+  - name: "2.7 Unit tests"
+    python: "2.7"
+    script:
+      - echo "skipped due to empty testcasses"
+  - name: "3.4 Unit tests"
+    python: "3.4"
+    script:
+      - echo "skipped due to empty testcasses"
+  - name: "2.7 Functional tests"
+    python: "2.7"
+    script:
+      - echo "skipped due to empty testcasses"
+  - name: "3.4 Functional tests"
+    python: "3.4"
+    script:
+      - echo "skipped due to empty testcasses"
+  - name: "Build and Publish"
+    python: "3.4"
+    script:
+      - echo Publishing.....
+    before_deploy:
+      - python setup.py sdist        
+    deploy:
+      provider: releases
+      file_glob: true
+      api_key: $GITHUB_TOKEN
+      skip_cleanup: true
+      file: dist/*.tar.gz
