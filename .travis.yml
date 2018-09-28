@@ -35,7 +35,7 @@ jobs:
       python:
         - 2.7
         - 3.4
-    -stage: build and publish release
+    - stage: build and publish release
       script:
         - echo publishing
       before_deploy:
