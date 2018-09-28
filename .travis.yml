@@ -5,10 +5,6 @@ language: python
 install:
   - pip install -r test-requirements.txt
 
-branches:
-  only:
-    - master
-
 matrix:
   include:
   - name: "2.7 Lint checks"
