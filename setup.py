@@ -14,7 +14,7 @@ setup(
     name='huaweicloud-python-sdk-core',
     version=huaweipythonsdkcore.__version__,
     description='HuaweiCloud Python SDK Core',
-    long_description=open('README.md').read(),
+    long_description="",
     author='Huawei Cloud',
     url='https://github.com/huaweicloud/huaweicloud-python-sdk-core',
     maintainer_email="support@huaweicloud.com",
