@@ -47,7 +47,6 @@ class RequestHandler(object):
             parameters['json'] = body
         if url_params:
             parameters['params'] = url_params
-
         response = http_method(path, **parameters)
         if isinstance(expected_code, list):
             if response.status_code not in expected_code:

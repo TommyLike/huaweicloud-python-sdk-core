@@ -15,7 +15,6 @@
 
 import hashlib
 import json
-import urllib
 
 import six
 from huaweipythonsdkcore.auth.authenticator import Authenticator
@@ -74,7 +73,8 @@ class AKSKAuthenticator(Authenticator):
                             (k.encode('utf-8') if isinstance(k, str) else k,
                              v.encode('utf-8') if isinstance(v, str) else v))
             result.sort(key=lambda item: item[0])
-            canonical_querystring = urllib.urlencode(result, doseq=True)
+            canonical_querystring = sign_util.get_urlencode()(result,
+                                                              doseq=True)
         else:
             canonical_querystring = ''
         canonical_header = [
@@ -84,8 +84,8 @@ class AKSKAuthenticator(Authenticator):
         canonical_header = '\n'.join(canonical_header)
         canonical_header += '\n'
         signed_header = ';'.join([k.lower() for k in self.headtosign])
-
-        request_payload = hashlib.sha256(body).hexdigest()
+        request_payload = hashlib.sha256(sign_util.get_utf8_bytes(
+            body)).hexdigest()
         return '\n'.join([canonical_method, canonical_uri,
                           canonical_querystring, canonical_header,
                           signed_header, request_payload])

@@ -26,11 +26,11 @@ matrix:
   - name: "2.7 Functional tests"
     python: "2.7"
     script:
-      - echo "skipped due to empty testcasses"
+      - tox -e functional
   - name: "3.4 Functional tests"
     python: "3.4"
     script:
-      - echo "skipped due to empty testcasses"
+      - tox -e functional
   - name: "Build and Publish"
     python: "3.4"
     script:
