@@ -3,8 +3,7 @@
 
 This is the base library for HuaweiCloud python SDK, it provides the
 basic logic to authorize, locate endpoint and perform low level API
-requests, it's not for any standalone usage, although we are working
-in progress, any contribution is welcome.
+requests, it's not for any standalone usage.
 
 # Install
 

@@ -10,7 +10,7 @@ from setuptools import setup, find_packages
 import huaweipythonsdkcore
 
 root_directory = path.abspath(path.dirname(__file__))
-with io.open(path.join(root_directory, 'README.md'), encoding='utf-8') as f:
+with io.open(path.join(root_directory, 'README.rst'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
