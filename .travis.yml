@@ -31,10 +31,10 @@ matrix:
     python: "3.5"
     script:
       - tox -e functional
-  - name: "Build and Publish"
+  - name: "Publish to github"
     python: "3.5"
     script:
-      - echo Publishing.....
+      - echo "Publishing to github"
     before_deploy:
       - python setup.py sdist        
     deploy:
@@ -43,5 +43,15 @@ matrix:
       api_key: $GITHUB_TOKEN
       skip_cleanup: true
       file: dist/*.tar.gz
+      on:
+        tags: true
+  - name: "Publish to PyPi"
+    python: "3.5"
+    script:
+      - echo "Publishing to Pypi"
+    deploy:
+      provider: pypi
+      user: $PYPI_USERNAME
+      password: $PYPI_PASSWORD
       on:
         tags: true
