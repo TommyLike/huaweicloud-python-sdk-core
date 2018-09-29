@@ -24,6 +24,26 @@ Install via github source code.
 **NOTE**: For Mac and python 3+ user, please install `requests[security]` as well,
 [Reference](https://github.com/requests/requests/issues/3189).
 
+# Tests
+
+Use tox to run all test tasks.
+```shell
+tox
+```
+Functional testcases depend environment variables, therefore they are disabled
+in default, in order to re-open them, please configure these at least:
+
+```shell
+export access_key_id=<access-key>
+export access_key_secret=<secret-key>
+export username=<username>
+export password=<password>
+export domain=<domain_name>
+export auth_url=<auth_url>
+export region=<region_id>
+```
+
+
 # Usage
 
 These code below demonstrates how to use our client to invoke
