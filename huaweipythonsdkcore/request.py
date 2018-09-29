@@ -13,13 +13,11 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import httplib
-
 
 class BaseRequest(object):
-    """
-    Base request class. This class includes all required elements regarding
-    HTTP request.
+    """Base request class.
+
+    This class includes all required elements regarding HTTP request.
     """
 
     # Name of service that the request belongs to.
@@ -33,8 +31,7 @@ class BaseRequest(object):
 
     # Expected response code, either integer or array,
     # reference: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
-    _success_codes = [httplib.OK, httplib.CREATED, httplib.ACCEPTED,
-                      httplib.NO_CONTENT]
+    _success_codes = [200, 201, 202, 204]
 
     # Request timeout of seconds.
     _timeout = 30

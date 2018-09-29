@@ -11,28 +11,28 @@ matrix:
     python: "2.7"
     script:
       - tox -e flake8
-  - name: "3.4 Lint checks"
-    python: "3.4"
+  - name: "3.5 Lint checks"
+    python: "3.5"
     script:
       - tox -e flake8
   - name: "2.7 Unit tests"
     python: "2.7"
     script:
       - echo "skipped due to empty testcasses"
-  - name: "3.4 Unit tests"
-    python: "3.4"
+  - name: "3.5 Unit tests"
+    python: "3.5"
     script:
       - echo "skipped due to empty testcasses"
   - name: "2.7 Functional tests"
     python: "2.7"
     script:
-      - echo "skipped due to empty testcasses"
-  - name: "3.4 Functional tests"
-    python: "3.4"
+      - tox -e functional
+  - name: "3.5 Functional tests"
+    python: "3.5"
     script:
-      - echo "skipped due to empty testcasses"
+      - tox -e functional
   - name: "Build and Publish"
-    python: "3.4"
+    python: "3.5"
     script:
       - echo Publishing.....
     before_deploy:
@@ -45,4 +45,3 @@ matrix:
       file: dist/*.tar.gz
       on:
         tags: true
-

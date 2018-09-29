@@ -15,7 +15,6 @@
 
 import json
 from abc import ABCMeta, abstractmethod
-import httplib
 
 from huaweipythonsdkcore import request
 from huaweipythonsdkcore import request_handler
@@ -40,17 +39,17 @@ class AuthenticationRequest(request.BaseRequest):
 
 class EndpointRequest(AuthenticationRequest):
     _base_endpoint = '/endpoints'
-    _success_codes = httplib.OK
+    _success_codes = 200
 
 
 class ServiceRequest(AuthenticationRequest):
     _base_endpoint = '/services'
-    _success_codes = httplib.OK
+    _success_codes = 200
 
 
 class ProjectRequest(AuthenticationRequest):
     _base_endpoint = '/projects'
-    _success_codes = httplib.OK
+    _success_codes = 200
 
 
 class HttpEndpointResolver(EndpointResolver, base_client.BaseClient):
@@ -91,10 +90,11 @@ class HttpEndpointResolver(EndpointResolver, base_client.BaseClient):
         full_path = utils.get_request_endpoint(endpoint_request, self.auth_url)
         _, result, _ = self._do_request(endpoint_request, full_path)
         endpoints = json.loads(result)
-        endpoint = [ep['url'] for ep in endpoints['endpoints']
-                    if (ep['interface'] == req.interface
-                        and ep['service_id'] in service
-                        and ('region' in ep and ep['region'] == region))]
+        endpoint = [
+            ep['url'] for ep in endpoints['endpoints']
+            if (ep['interface'] == req.interface and ep[
+                'service_id'] in service and (
+                    'region' in ep and ep['region'] == region))]
 
         if len(endpoint) == 0:
             raise exception.EndpointResolveException(

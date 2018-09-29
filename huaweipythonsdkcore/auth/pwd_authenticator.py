@@ -13,8 +13,6 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import httplib
-
 from huaweipythonsdkcore.auth.authenticator import Authenticator
 from huaweipythonsdkcore import request_handler
 from huaweipythonsdkcore import utils
@@ -25,7 +23,7 @@ class AuthenticationRequest(request.BaseRequest):
 
     _service = 'identity'
     _base_endpoint = '/auth/tokens'
-    _success_codes = httplib.CREATED
+    _success_codes = 201
     _http_method = 'POST'
     _timeout = 60
 

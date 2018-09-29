@@ -22,6 +22,9 @@ Install via github source code.
     $ python setup.py install
 ```
 
+**NOTE**: For Mac and python 3+ user, please install `requests[security]` as well,
+[Reference](https://github.com/requests/requests/issues/3189).
+
 # Usage
 
 These code below demonstrates how to use our client to invoke

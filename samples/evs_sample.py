@@ -1,4 +1,3 @@
-import httplib
 import os
 import json
 import time
@@ -22,7 +21,7 @@ class CreateVolumeRequest(EvsRequest):
 
     _http_method = 'POST'
 
-    _success_codes = [httplib.CREATED, httplib.ACCEPTED]
+    _success_codes = [201, 202]
 
     _available_attributes = {
         'Name': str,
@@ -59,7 +58,7 @@ class ShowVolumeRequest(EvsRequest):
 
     _http_method = 'GET'
 
-    _success_codes = [httplib.OK]
+    _success_codes = [201]
 
     def __init__(self, volume_id):
         self._base_endpoint = self._base_endpoint.replace("{volume_id}",
@@ -73,7 +72,7 @@ class UpdateVolumeRequest(EvsRequest):
 
     _http_method = 'PUT'
 
-    _success_codes = [httplib.OK]
+    _success_codes = [200]
 
     def __init__(self, volume_id):
         self._base_endpoint = self._base_endpoint.replace("{volume_id}",

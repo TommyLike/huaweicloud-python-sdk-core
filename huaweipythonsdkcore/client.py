@@ -41,7 +41,7 @@ class Client(base_client.BaseClient):
         super(Client, self).__init__(authenticator=self.authenticator)
 
     def handle_request(self, req):
-        """Perform http request with supplied Request object
+        """Perform http request with supplied Request object.
 
         :param req: Request object, is a instance of BaseRequest.
         :return: Response tuple, (code, content).
