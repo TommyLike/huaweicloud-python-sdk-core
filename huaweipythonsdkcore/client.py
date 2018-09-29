@@ -13,8 +13,8 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-from huaweipythonsdkcore import request as request
-from huaweipythonsdkcore.auth import factory as sign_util
+from huaweipythonsdkcore import request
+from huaweipythonsdkcore.auth import factory as auth_util
 from huaweipythonsdkcore import utils
 from huaweipythonsdkcore import endpoint_resolver
 from huaweipythonsdkcore import exception
@@ -31,7 +31,7 @@ class Client(base_client.BaseClient):
         # NOTE(tommylikehu): In most of the cases, the tenant would be equal
         # to region, therefore, we set it to region if parameter not provided.
         self.tenant = tenant if tenant else region
-        self.authenticator = sign_util.get_authenticator(
+        self.authenticator = auth_util.get_authenticator(
             cred=credential,
             region=region,
             auth_url=self.auth_url)

@@ -55,6 +55,9 @@ def collect_complete_headers(endpoint, request):
 
         if key not in request.headers and value is not None:
             h[key] = value
+    for (key, value) in [('Host', get_host_name(endpoint)),
+                         ('X-Sdk-Date', get_format_datetime())]:
+        h[key] = value
     return h
 
 

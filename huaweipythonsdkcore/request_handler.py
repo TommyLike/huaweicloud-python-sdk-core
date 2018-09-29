@@ -14,7 +14,6 @@
 #    under the License.
 
 import requests
-from huaweipythonsdkcore import exception
 from huaweipythonsdkcore import utils
 
 
@@ -33,7 +32,7 @@ class RequestHandler(object):
 
     @utils.retry(requests.exceptions.Timeout, retries=3, backoff_rate=2)
     def handle_request(self, path, method, headers, url_params, body,
-                       timeout=None, expected_code=None):
+                       timeout=None):
         http_method = getattr(self._session, method.lower(), None)
         if http_method is None:
             raise Exception("Unable to find http "
@@ -48,13 +47,4 @@ class RequestHandler(object):
         if url_params:
             parameters['params'] = url_params
         response = http_method(path, **parameters)
-        if isinstance(expected_code, list):
-            if response.status_code not in expected_code:
-                raise exception.HttpResponseException(
-                    response.text, response.status_code,
-                    ','.join(map(str, expected_code)))
-        elif isinstance(expected_code, int):
-            if response.status_code != expected_code:
-                raise exception.HttpResponseException(
-                    response.text, response.status_code, expected_code)
         return response.status_code, response.text, response.headers

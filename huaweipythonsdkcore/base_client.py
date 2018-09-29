@@ -39,21 +39,13 @@ class BaseClient(object):
                 headers=headers,
                 url_params=req.url_params,
                 body=req.body,
-                timeout=req.timeout,
-                expected_code=req.success_code)
+                timeout=req.timeout)
         try:
             result = send(req, full_path, self.authenticator.auth)
-            if not (result[0] == 401 and
-                    self.authenticator.support_re_auth):
+            if result[0] == 401 and self.authenticator.support_re_auth:
+                # Re-auth and process request again
+                return send(req, full_path, self.authenticator.re_auth)
+            else:
                 return result
-        except requests.exceptions.RequestException as err:
-            raise exception.RequestException(err)
-        except exception.HttpResponseException as e:
-            if not (e.code == 401 and
-                    self.authenticator.support_re_auth):
-                raise e
-        # Re-auth and process request again
-        try:
-            return send(req, full_path, self.authenticator.re_auth)
         except requests.exceptions.RequestException as err:
             raise exception.RequestException(err)

@@ -23,7 +23,6 @@ class AuthenticationRequest(request.BaseRequest):
 
     _service = 'identity'
     _base_endpoint = '/auth/tokens'
-    _success_codes = 201
     _http_method = 'POST'
     _timeout = 60
 
@@ -79,8 +78,7 @@ class PwdAuthenticator(Authenticator):
             headers={},
             url_params=None,
             body=self.auth_content,
-            timeout=req.timeout,
-            expected_code=req.success_code)
+            timeout=req.timeout)
         return headers[self.AUTH_HEADER]
 
     def auth(self, url=None, method=None, headers=None, body=None, params=None,
