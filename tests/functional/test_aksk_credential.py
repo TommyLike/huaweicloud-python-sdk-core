@@ -16,7 +16,9 @@
 import os
 import json
 
+import testtools
 from testtools import TestCase
+from tests.functional import test_utils
 from huaweipythonsdkcore import request
 from huaweipythonsdkcore import client
 from huaweipythonsdkcore import credential
@@ -124,6 +126,11 @@ class AkSKCredential(TestCase):
             ),
             region=os.environ['region'])
 
+    @testtools.skipIf(
+        (test_utils.environments_exist(['auth_url', 'region',
+                                        'access_key_id',
+                                        'access_key_secret']) is False),
+        "AKSK testcases skipped due to incomplete envs.")
     def test_list_volume(self):
         code, result, _ = self.client.handle_request(req=ListVolumeRequest())
         self.assertEqual(200, code,
@@ -131,6 +138,11 @@ class AkSKCredential(TestCase):
         volumes = json.loads(result)
         self.assertIsInstance(volumes['volumes'], list)
 
+    @testtools.skipIf(
+        (test_utils.environments_exist(['auth_url', 'region',
+                                        'access_key_id',
+                                        'access_key_secret']) is False),
+        "AKSK testcases skipped due to incomplete envs.")
     def test_volume_crud(self):
         # create volume
         create_volume = CreateVolumeRequest(
