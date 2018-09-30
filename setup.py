@@ -23,7 +23,7 @@ setup(
     maintainer_email="support@huaweicloud.com",
     scripts=[],
     packages=find_packages(),
-    install_requires=['requests > 2.18.0',
+    install_requires=['urllib3 >= 1.23',
                       'six >= 1.10.0',
                       'retrying >= 0.9.0'],
     license="Apache License 2.0",

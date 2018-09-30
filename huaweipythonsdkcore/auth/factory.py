@@ -22,14 +22,10 @@ def get_authenticator(cred, region, auth_url):
 
     if isinstance(cred, credential.AccessKeyCredential):
         return aksk_authenticator.AKSKAuthenticator(
-            access_key=cred.access_key_id,
-            secret_key=cred.access_key_secret,
+            cred,
             region=region)
     elif isinstance(cred, credential.PasswordCredential):
-        return pwd_authenticator.PwdAuthenticator(username=cred.username,
-                                                  password=cred.password,
-                                                  domain=cred.domain,
-                                                  project=cred.project,
+        return pwd_authenticator.PwdAuthenticator(cred,
                                                   auth_url=auth_url)
 
     else:

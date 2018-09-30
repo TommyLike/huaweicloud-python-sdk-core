@@ -17,10 +17,12 @@ import hashlib
 import json
 
 import six
+from six.moves.urllib.parse import urlencode
 from huaweipythonsdkcore.auth.authenticator import Authenticator
 from huaweipythonsdkcore.auth import digester
 from huaweipythonsdkcore.auth import utils as sign_util
 from huaweipythonsdkcore import utils
+
 
 TERMINATORSTRING = "sdk_request"
 
@@ -30,12 +32,14 @@ class AKSKAuthenticator(Authenticator):
     SIGN_HEADER = 'Authorization'
     _re_auth = False
 
-    def __init__(self, access_key=None, secret_key=None, region=None):
-        self.ak = access_key
-        self.sk = secret_key
+    def __init__(self, credential, region=None):
+        self.ak = credential.access_key_id
+        self.sk = credential.access_key_secret
         self.region = region
         self.headtosign = ['Host', 'X-Sdk-Date']
         self.digester = digester.Sha256()
+        super(AKSKAuthenticator, self).__init__(
+            ssl=credential.ssl_verification)
 
     def _make_canonical_request(self, method=None, url=None, headers=None,
                                 params=None, body=None):
@@ -73,8 +77,7 @@ class AKSKAuthenticator(Authenticator):
                             (k.encode('utf-8') if isinstance(k, str) else k,
                              v.encode('utf-8') if isinstance(v, str) else v))
             result.sort(key=lambda item: item[0])
-            canonical_querystring = sign_util.get_urlencode()(result,
-                                                              doseq=True)
+            canonical_querystring = urlencode(result, doseq=True)
         else:
             canonical_querystring = ''
         canonical_header = [

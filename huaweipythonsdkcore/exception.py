@@ -41,15 +41,6 @@ class EndpointResolveException(SDKException):
                                                        message=message)
 
 
-class HttpResponseException(SDKException):
-
-    def __init__(self, message, code, expected_code):
-        message = "Http request failed with message: {}, " \
-                  "expected response: {}.".format(message, expected_code)
-        super(HttpResponseException, self).__init__(code=code,
-                                                    message=message)
-
-
 class ValueException(SDKException):
 
     def __init__(self, message):

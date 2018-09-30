@@ -29,10 +29,6 @@ class BaseRequest(object):
     # reference: https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods
     _http_method = 'GET'
 
-    # Expected response code, either integer or array,
-    # reference: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
-    _success_codes = [200, 201, 202, 204]
-
     # Request timeout of seconds.
     _timeout = 30
 
@@ -123,7 +119,3 @@ class BaseRequest(object):
     @property
     def timeout(self):
         return self._timeout
-
-    @property
-    def success_code(self):
-        return self._success_codes

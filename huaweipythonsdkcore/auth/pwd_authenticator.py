@@ -14,7 +14,7 @@
 #    under the License.
 
 from huaweipythonsdkcore.auth.authenticator import Authenticator
-from huaweipythonsdkcore import request_handler
+from huaweipythonsdkcore import urllib3_handler
 from huaweipythonsdkcore import utils
 from huaweipythonsdkcore import request
 
@@ -23,7 +23,6 @@ class AuthenticationRequest(request.BaseRequest):
 
     _service = 'identity'
     _base_endpoint = '/auth/tokens'
-    _success_codes = 201
     _http_method = 'POST'
     _timeout = 60
 
@@ -34,15 +33,16 @@ class PwdAuthenticator(Authenticator):
     AUTH_HEADER = 'X-Subject-Token'
     _re_auth = True
 
-    def __init__(self, username=None, password=None, domain=None, project=None,
-                 auth_url=None):
-        self.username = username
-        self.password = password
-        self.domain = domain
-        self.project = project
+    def __init__(self, credential, auth_url=None):
+        self.username = credential.username
+        self.password = credential.password
+        self.domain = credential.domain
+        self.project = credential.project
         self.auth_url = auth_url
-        self.handler = request_handler.RequestHandler.get_instance()
+        self.handler = urllib3_handler.RequestHandler.get_instance()
         self._auth_token_cache = None
+        super(PwdAuthenticator, self).__init__(
+            ssl=credential.ssl_verification)
 
     @property
     def auth_content(self):
@@ -79,8 +79,7 @@ class PwdAuthenticator(Authenticator):
             headers={},
             url_params=None,
             body=self.auth_content,
-            timeout=req.timeout,
-            expected_code=req.success_code)
+            timeout=req.timeout)
         return headers[self.AUTH_HEADER]
 
     def auth(self, url=None, method=None, headers=None, body=None, params=None,

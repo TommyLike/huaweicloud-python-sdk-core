@@ -13,9 +13,9 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import requests
+import urllib3
 from huaweipythonsdkcore import exception
-from huaweipythonsdkcore import request_handler
+from huaweipythonsdkcore import urllib3_handler
 from huaweipythonsdkcore import utils
 
 
@@ -23,7 +23,7 @@ class BaseClient(object):
 
     def __init__(self, authenticator=None):
         self.authenticator = authenticator
-        self.handler = request_handler.RequestHandler.get_instance()
+        self.handler = urllib3_handler.RequestHandler.get_instance()
 
     def _do_request(self, req, full_path):
 
@@ -39,21 +39,13 @@ class BaseClient(object):
                 headers=headers,
                 url_params=req.url_params,
                 body=req.body,
-                timeout=req.timeout,
-                expected_code=req.success_code)
+                timeout=req.timeout)
         try:
             result = send(req, full_path, self.authenticator.auth)
-            if not (result[0] == 401 and
-                    self.authenticator.support_re_auth):
+            if result[0] == 401 and self.authenticator.support_re_auth:
+                # Re-auth and process request again
+                return send(req, full_path, self.authenticator.re_auth)
+            else:
                 return result
-        except requests.exceptions.RequestException as err:
-            raise exception.RequestException(err)
-        except exception.HttpResponseException as e:
-            if not (e.code == 401 and
-                    self.authenticator.support_re_auth):
-                raise e
-        # Re-auth and process request again
-        try:
-            return send(req, full_path, self.authenticator.re_auth)
-        except requests.exceptions.RequestException as err:
+        except urllib3.exceptions.HTTPError as err:
             raise exception.RequestException(err)

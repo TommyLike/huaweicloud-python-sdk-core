@@ -69,8 +69,6 @@ class ListVolumesRequest(request.BaseRequest):
 
     _http_method = 'GET'
 
-    _success_codes = [httplib.OK]
-
     _user_agent = 'huawei-python-sdk/1.0.1'
 ```
 ## Initialize client
