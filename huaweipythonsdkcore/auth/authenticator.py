@@ -25,6 +25,9 @@ class Authenticator(object):
     __metaclass__ = ABCMeta
     _re_auth = False
 
+    def __init__(self, ssl):
+        self.ssl = ssl
+
     @abstractmethod
     def auth(self, url=None, method=None, headers=None,
              body=None, params=None, service=None):

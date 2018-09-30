@@ -15,7 +15,6 @@
 
 
 import sys
-import urllib
 
 import six
 
@@ -30,9 +29,3 @@ def get_utf8_bytes(message):
         message = message.decode(
             sys.stdin.encoding if sys.stdin.encoding else 'cp936')
     return message.encode('utf8')
-
-
-def get_urlencode():
-    if six.PY2:
-        return urllib.urlencode
-    return urllib.parse.urlencode
