@@ -41,9 +41,7 @@ def collect_complete_headers(endpoint, request):
     h = request.headers.copy()
     for (key, value) in [('Content-Type', request.content_type),
                          ('Accept', request.accept),
-                         ('User-Agent', request.user_agent),
-                         ('Host', get_host_name(endpoint)),
-                         ('X-Sdk-Date', get_format_datetime())]:
+                         ('User-Agent', request.user_agent)]:
 
         if key not in request.headers and value is not None:
             h[key] = value
