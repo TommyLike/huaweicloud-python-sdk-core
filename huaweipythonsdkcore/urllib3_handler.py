@@ -17,10 +17,11 @@ import json
 import multiprocessing
 import ssl
 
+from huaweipythonsdkcore import exception
+import six
+from six.moves.urllib.parse import urlencode
 import urllib3
 from urllib3.util import retry
-from six.moves.urllib.parse import urlencode
-from huaweipythonsdkcore import exception
 
 
 class RequestHandler(object):
@@ -68,4 +69,11 @@ class RequestHandler(object):
                 preload_content=False,
                 timeout=timeout,
                 headers=headers)
-        return result.status, result.data, dict(result.headers)
+
+        body = result.data
+        # In the python 3, the response.data is bytes.
+        # we need to decode it to string.
+        if six.PY3:
+            body = result.data.decode('utf8')
+
+        return result.status, body, dict(result.headers)
