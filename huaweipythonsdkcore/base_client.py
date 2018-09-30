@@ -13,9 +13,9 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import requests
+import urllib3
 from huaweipythonsdkcore import exception
-from huaweipythonsdkcore import request_handler
+from huaweipythonsdkcore import urllib3_handler
 from huaweipythonsdkcore import utils
 
 
@@ -23,7 +23,7 @@ class BaseClient(object):
 
     def __init__(self, authenticator=None):
         self.authenticator = authenticator
-        self.handler = request_handler.RequestHandler.get_instance()
+        self.handler = urllib3_handler.RequestHandler.get_instance()
 
     def _do_request(self, req, full_path):
 
@@ -47,5 +47,5 @@ class BaseClient(object):
                 return send(req, full_path, self.authenticator.re_auth)
             else:
                 return result
-        except requests.exceptions.RequestException as err:
+        except urllib3.exceptions.HTTPError as err:
             raise exception.RequestException(err)

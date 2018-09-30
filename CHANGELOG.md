@@ -8,4 +8,7 @@
 
 2018-9-28: Add travis and github release support.
 
+2018-9-30: Replace requests library with urllib3.
+
+
 

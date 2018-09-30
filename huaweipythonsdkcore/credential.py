@@ -23,12 +23,18 @@ class Credential(object):
     def __str__(self):
         pass
 
+    def __init__(self, ssl_verification):
+        # TODO(tommylikehu): ssl verification is disabled currently.
+        self.ssl_verification = ssl_verification
+
 
 class AccessKeyCredential(Credential):
 
-    def __init__(self, access_key_id, access_key_secret):
+    def __init__(self, access_key_id, access_key_secret,
+                 ssl_verification=None):
         self.access_key_id = access_key_id
         self.access_key_secret = access_key_secret
+        super(AccessKeyCredential, self).__init__(ssl_verification)
 
     def __str__(self):
         return "AccessKey: {}, KeySecret: {}".format(self.access_key_id,
@@ -37,11 +43,13 @@ class AccessKeyCredential(Credential):
 
 class PasswordCredential(Credential):
 
-    def __init__(self, username, password, domain, project):
+    def __init__(self, username, password, domain, project,
+                 ssl_verification=None):
         self.username = username
         self.password = password
         self.domain = domain
         self.project = project
+        super(PasswordCredential, self).__init__(ssl_verification)
 
     def __str__(self):
         return "Username: {}, Password: {}, Domain: {}, " \
