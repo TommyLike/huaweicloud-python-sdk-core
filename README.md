@@ -96,11 +96,20 @@ or
          ),
         region=<region-id>)
 ```
-## Use client to invoke API via Request instance.
+## Use client to invoke API via Request instance
 ```python
 
 # Query available volumes
 demo_client.handle_request(req=ListVolumesRequest())
+```
+
+## Use client to invoke API via raw request parameters
+if you prefer a more simple and direct approach, you can invoke API
+without constructing a `request` object.
+```python
+# Query available servers
+demo_client = client.handle_raw_request(
+    "compute", "GET", "/servers"):
 ```
 
 ## Wrap content with Response Object
@@ -108,5 +117,5 @@ Client only returns the raw API content in the format of tuple:
 
     (int_respond_code, string_respond_content, dict_respond_header)
 
-It's better to deserialize them into Response object for better usage experience.
+It's better to deserialize them into Response object for better endpoint usage experience.
 

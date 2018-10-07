@@ -44,7 +44,7 @@ class Client(base_client.BaseClient):
         """Perform http request with supplied Request object.
 
         :param req: Request object, is a instance of BaseRequest.
-        :return: Response tuple, (code, content).
+        :return: Response tuple, (code, content, header).
         :raise: SDKException: All of the exceptional cases are wrapped
                               in SDKException.
         """
@@ -68,7 +68,7 @@ class Client(base_client.BaseClient):
         :param query_params: dictionary of query params
         :param body: dictionary of request body
         :param timeout: request timeout in seconds
-        :return:
+        :return response: Response tuple (code, content, header)
         """
         return self.handle_request(utils.build_request_object(
             service=service, method=method,
