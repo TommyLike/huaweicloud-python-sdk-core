@@ -1,4 +1,5 @@
 tox
 flake8
 testtools
+ddt
 -rrequirements.txt

@@ -18,11 +18,11 @@ matrix:
   - name: "2.7 Unit tests"
     python: "2.7"
     script:
-      - echo "skipped due to empty testcasses"
+      - tox -e unit
   - name: "3.5 Unit tests"
     python: "3.5"
     script:
-      - echo "skipped due to empty testcasses"
+      - tox -e unit
   - name: "2.7 Functional tests"
     python: "2.7"
     script:

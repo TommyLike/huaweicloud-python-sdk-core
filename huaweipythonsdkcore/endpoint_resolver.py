@@ -113,7 +113,8 @@ class HttpEndpointResolver(EndpointResolver, base_client.BaseClient):
 
     def resolve(self, req, region, tenant=None):
         endpoint_key = "{}/{}/{}/{}".format(region, tenant,
-                                            req.service, req.interface)
+                                            req.service,
+                                            req.interface)
         if endpoint_key not in self._endpoint_cache:
             self._endpoint_cache[endpoint_key] = self._resolve(req, region,
                                                                tenant)
