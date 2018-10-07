@@ -47,10 +47,19 @@ class BaseRequest(object):
     def __init__(self,
                  headers=None,
                  url_params=None,
-                 body=None):
+                 body=None, service=None,
+                 method=None,
+                 endpoint=None,
+                 timeout=None):
         self._headers = {} if headers is None else headers
         self._url_params = {} if url_params is None else url_params
         self._body = {} if body is None else body
+        self._service = service if service else self._service
+        self._http_method = method if method else self._http_method
+        self._base_endpoint = \
+            self._base_endpoint if endpoint is None else endpoint
+        self._timeout = timeout
+
         if [item for item in [
                 self._headers, self._url_params, self._body] if not isinstance(
                 item, dict)]:
@@ -106,15 +115,15 @@ class BaseRequest(object):
 
     @property
     def service(self):
-        return self._service
+        return self._service.lower()
 
     @property
     def http_method(self):
-        return self._http_method
+        return self._http_method.upper()
 
     @property
     def interface(self):
-        return self._interface
+        return self._interface.lower()
 
     @property
     def timeout(self):

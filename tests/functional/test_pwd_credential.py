@@ -16,7 +16,7 @@
 import os
 
 import testtools
-from tests.functional import test_utils
+from tests.functional import utils
 from huaweipythonsdkcore import client
 from huaweipythonsdkcore import credential
 from tests.functional import test_aksk_credential
@@ -36,7 +36,7 @@ class PwdCredential(test_aksk_credential.AkSKCredential):
             region=os.environ['region'])
 
     @testtools.skipIf(
-        (test_utils.environments_exist(['auth_url', 'region',
+        (utils.environments_exist(['auth_url', 'region',
                                         'username',
                                         'password',
                                         'domain']) is False),
@@ -45,7 +45,7 @@ class PwdCredential(test_aksk_credential.AkSKCredential):
         super(PwdCredential, self).test_list_volume()
 
     @testtools.skipIf(
-        (test_utils.environments_exist(['auth_url', 'region',
+        (utils.environments_exist(['auth_url', 'region',
                                         'username',
                                         'password',
                                         'domain']) is False),

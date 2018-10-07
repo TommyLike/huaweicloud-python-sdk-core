@@ -56,3 +56,22 @@ class Client(base_client.BaseClient):
         endpoint = self.resolver.resolve(req, self.region, self.tenant)
         full_path = utils.get_request_endpoint(req, endpoint)
         return self._do_request(req, full_path)
+
+    def handle_raw_request(self, service, method, path, headers=None,
+                           query_params=None, body=None, timeout=None):
+        """Perform raw request with supplied separared informations.
+
+        :param service: service name, for example: ECS/EVS
+        :param method: method name, for example: GET/POST/PUT
+        :param path: relative request path
+        :param headers: dictionary of headers
+        :param query_params: dictionary of query params
+        :param body: dictionary of request body
+        :param timeout: request timeout in seconds
+        :return:
+        """
+        return self.handle_request(utils.build_request_object(
+            service=service, method=method,
+            path=path, headers=headers,
+            query_params=query_params, body=body,
+            timeout=timeout))

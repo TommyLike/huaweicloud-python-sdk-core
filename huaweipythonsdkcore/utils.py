@@ -16,6 +16,8 @@
 import datetime
 
 from six.moves.urllib import parse
+from huaweipythonsdkcore import request
+from huaweipythonsdkcore import exception
 
 TIME_FORMAT = "%Y%m%dT%H%M%SZ"
 
@@ -49,3 +51,30 @@ def collect_complete_headers(endpoint, request):
                          ('X-Sdk-Date', get_format_datetime())]:
         h[key] = value
     return h
+
+
+def build_request_object(service, method, path, headers=None,
+                         query_params=None, body=None, timeout=None):
+    if not service:
+        raise exception.ValueException(
+            "Service: {} should not be empty. ".format(service))
+    if method is None or method.upper() not in ['GET', 'HEAD',
+                                                'DELETE', 'POST',
+                                                'PUT', 'PATCH', 'OPTIONS']:
+        raise exception.ValueException(
+            "Http method: {} is not supported now.".format(method))
+    if timeout is not None and not isinstance(timeout, int):
+        raise exception.ValueException(
+            "Timeout only support integer now.")
+    if not all(
+            [isinstance(d, dict) for d in
+             [query_params, body, headers] if d is not None]):
+        raise exception.ValueException(
+            "Request body, header and query parameters should be dictionary.")
+
+    return request.BaseRequest(headers=headers, body=body,
+                               url_params=query_params,
+                               service=service,
+                               method=method.upper(),
+                               endpoint=path,
+                               timeout=timeout)
