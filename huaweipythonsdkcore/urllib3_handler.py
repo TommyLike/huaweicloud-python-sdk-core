@@ -59,14 +59,14 @@ class RequestHandler(object):
             result = self.pool_manager.request(
                 method, path,
                 body=body,
-                preload_content=False,
+                preload_content=True,
                 timeout=timeout,
                 headers=headers)
         else:
             result = self.pool_manager.request(
                 method, path,
                 fields=url_params,
-                preload_content=False,
+                preload_content=True,
                 timeout=timeout,
                 headers=headers)
 
