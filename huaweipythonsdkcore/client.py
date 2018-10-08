@@ -58,7 +58,8 @@ class Client(base_client.BaseClient):
         return self._do_request(req, full_path)
 
     def handle_raw_request(self, service, method, path, headers=None,
-                           query_params=None, body=None, timeout=None):
+                           query_params=None, body=None, timeout=None,
+                           **kwargs):
         """Perform raw request with supplied separared informations.
 
         :param service: service name, for example: ECS/EVS
@@ -70,8 +71,9 @@ class Client(base_client.BaseClient):
         :param timeout: request timeout in seconds
         :return response: Response tuple (code, content, header)
         """
-        return self.handle_request(utils.build_request_object(
-            service=service, method=method,
-            path=path, headers=headers,
-            query_params=query_params, body=body,
-            timeout=timeout))
+        return self.handle_request(
+            utils.build_request_object(
+                service=service, method=method,
+                path=path, headers=headers,
+                query_params=query_params, body=body,
+                timeout=timeout))
