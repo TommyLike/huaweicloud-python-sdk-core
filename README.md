@@ -109,7 +109,7 @@ without constructing a `request` object.
 ```python
 # Query available servers
 demo_client = client.handle_raw_request(
-    "compute", "GET", "/servers"):
+    "nova", "GET", "/servers"):
 ```
 
 ## Wrap content with Response Object

@@ -142,6 +142,9 @@ if __name__ == "__main__":
         # Delete volume
         print(demo_client.handle_request(req=DeleteVolumeRequest(
             volume_obj['volume']['id'])))
+
+        # Or, show servers without constructing a request object.
+        print(demo_client.handle_raw_request('nova', 'GET', '/servers'))
     except exception.SDKException as err:
         print(err)
 
