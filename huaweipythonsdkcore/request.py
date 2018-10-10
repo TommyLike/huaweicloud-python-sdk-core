@@ -13,6 +13,9 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+import six
+from huaweipythonsdkcore import exception
+
 
 class BaseRequest(object):
     """Base request class.
@@ -61,10 +64,15 @@ class BaseRequest(object):
         self._timeout = timeout
 
         if [item for item in [
-                self._headers, self._url_params, self._body] if not isinstance(
+                self._headers, self._url_params] if not isinstance(
                 item, dict)]:
-            raise ValueError(
-                "'header', 'url_params' and 'body' should be dictionary.")
+            raise exception.ValueException(
+                "'header', 'url_params' and  should be dictionary.")
+
+        if not isinstance(self._body, (six.binary_type, dict, str)):
+            raise exception.ValueException(
+                "'body' should be dictionary, binary or string.")
+
         self._host = None
 
     @property
@@ -74,7 +82,8 @@ class BaseRequest(object):
     @headers.setter
     def headers(self, value):
         if not isinstance(value, dict):
-            raise ValueError("'header' should be a dictionary.")
+            raise exception.ValueException(
+                "'header' should be a dictionary.")
         self._headers = value
 
     @property
@@ -84,7 +93,8 @@ class BaseRequest(object):
     @url_params.setter
     def url_params(self, value):
         if not isinstance(value, dict):
-            raise ValueError("'url' params should be a dictionary.")
+            raise exception.ValueException(
+                "'url' params should be a dictionary.")
         self._url_params = value
 
     @property
@@ -94,7 +104,8 @@ class BaseRequest(object):
     @body.setter
     def body(self, value):
         if not isinstance(value, dict):
-            raise ValueError("'body' should be a dictionary.")
+            raise exception.ValueException(
+                "'body' should be a dictionary.")
         self._body = value
 
     @property

@@ -34,14 +34,6 @@ class TestUtils(TestCase):
             'timeout': 1},
         {
             'headers': {},
-            'body': "",
-            'query_params': {},
-            'service': 'compute',
-            'method': 'GET',
-            'path': '/',
-            'timeout': 1},
-        {
-            'headers': {},
             'body': {},
             'query_params': "",
             'service': 'compute',
@@ -117,7 +109,23 @@ class TestUtils(TestCase):
             'service': 'compute',
             'method': 'get',
             'path': '/',
-            'timeout': 1}
+            'timeout': 1},
+        {
+            'headers': None,
+            'body': None,
+            'query_params': None,
+            'service': 'compute',
+            'method': 'get',
+            'path': '/',
+            'timeout': 1},
+        {
+            'headers': {'headers': "value"},
+            'body': "content_string",
+            'query_params': {},
+            'service': 'compute',
+            'method': 'GET',
+            'path': '/',
+            'timeout': 1},
     )
     def test_build_request_object(self, param):
         result = utils.build_request_object(**param)
