@@ -25,7 +25,10 @@ def get_utf8_bytes(message):
     :param message: the string of message
     :type message: string
     """
-    if six.PY2:
-        message = message.decode(
-            sys.stdin.encoding if sys.stdin.encoding else 'cp936')
-    return message.encode('utf8')
+    try:
+        if six.PY2:
+            message = message.decode(
+                sys.stdin.encoding if sys.stdin.encoding else 'cp936')
+        return message.encode('utf8')
+    except Exception:
+        return message

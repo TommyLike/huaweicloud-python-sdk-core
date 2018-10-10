@@ -11,3 +11,5 @@
 2018-9-30: Replace requests library with urllib3.
 
 2018-10-08: Support raw request and unit tests.
+
+2018-10-10: Support 'application/octet-stream' content type.

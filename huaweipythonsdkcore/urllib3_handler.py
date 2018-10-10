@@ -51,9 +51,14 @@ class RequestHandler(object):
                        timeout=None):
         method = method.upper()
         timeout = urllib3.Timeout(total=timeout)
+
+        if 'Content-Type' not in headers:
+            headers['Content-Type'] = 'application/json'
+
         if method in ['POST', 'PUT', 'PATCH', 'OPTIONS', 'DELETE']:
             if body:
-                body = json.dumps(body)
+                if isinstance(body, dict):
+                    body = json.dumps(body)
             if url_params:
                 path += '?' + urlencode(url_params)
             result = self.pool_manager.request(

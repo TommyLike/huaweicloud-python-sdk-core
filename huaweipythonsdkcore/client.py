@@ -52,6 +52,9 @@ class Client(base_client.BaseClient):
         if not isinstance(req, request.BaseRequest):
             raise exception.ValueException(
                 "request must be an instance of 'BaseRequest'.")
+        if not req.service:
+            raise exception.ValueException(
+                "Request's service attribute must not be empty.")
         # Get service endpoint from endpoint resolver
         endpoint = self.resolver.resolve(req, self.region, self.tenant)
         full_path = utils.get_request_endpoint(req, endpoint)

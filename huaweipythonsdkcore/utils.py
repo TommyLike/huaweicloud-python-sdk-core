@@ -66,12 +66,6 @@ def build_request_object(service, method, path, headers=None,
     if timeout is not None and not isinstance(timeout, int):
         raise exception.ValueException(
             "Timeout only support integer now.")
-    if not all(
-            [isinstance(d, dict) for d in
-             [query_params, body, headers] if d is not None]):
-        raise exception.ValueException(
-            "Request body, header and query parameters should be dictionary.")
-
     return request.BaseRequest(headers=headers, body=body,
                                url_params=query_params,
                                service=service,

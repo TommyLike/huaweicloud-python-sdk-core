@@ -21,8 +21,6 @@ class CreateVolumeRequest(EvsRequest):
 
     _http_method = 'POST'
 
-    _success_codes = [201, 202]
-
     _available_attributes = {
         'Name': str,
         'Description': str,
@@ -58,8 +56,6 @@ class ShowVolumeRequest(EvsRequest):
 
     _http_method = 'GET'
 
-    _success_codes = [201]
-
     def __init__(self, volume_id):
         self._base_endpoint = self._base_endpoint.replace("{volume_id}",
                                                           volume_id)
@@ -71,8 +67,6 @@ class UpdateVolumeRequest(EvsRequest):
     _base_endpoint = '/volumes/{volume_id}'
 
     _http_method = 'PUT'
-
-    _success_codes = [200]
 
     def __init__(self, volume_id):
         self._base_endpoint = self._base_endpoint.replace("{volume_id}",
@@ -92,26 +86,66 @@ class DeleteVolumeRequest(EvsRequest):
         super(DeleteVolumeRequest, self).__init__()
 
 
+class ImageRequest(request.BaseRequest):
+    _service = 'glance'
+
+    _user_agent = 'huawei-python-sdk/0.0.1'
+
+
+class CreateImageRequest(ImageRequest):
+    _base_endpoint = 'v2/images'
+
+    _http_method = 'POST'
+
+    def __init__(self, name):
+        body = {
+            "__os_version": "Ubuntu 14.04 server 64bit",
+            "container_format": "bare",
+            "disk_format": "vhd",
+            "min_disk": 1,
+            "min_ram": 1024,
+            "name": name,
+            "tags": [
+                "test",
+                "image"],
+            "visibility": "private",
+            "protected": False}
+        super(CreateImageRequest, self).__init__(body=body)
+
+
+class UploadImageRequest(ImageRequest):
+    _base_endpoint = "v2/images/{}/file"
+
+    _http_method = "PUT"
+
+    _content_type = "application/octet-stream"
+
+    def __init__(self, image_id, body):
+        self._base_endpoint = self._base_endpoint.format(image_id)
+
+        super(UploadImageRequest, self).__init__(body=body)
+
+
 if __name__ == "__main__":
 
     # Initialize the client
-    # demo_client = client.Client(
-    #     auth_url='https://iam.cn-north-1.myhwclouds.com:443/v3',
-    #     credential=credential.AccessKeyCredential(
-    #         access_key_id=os.environ['access_key_id'],
-    #         access_key_secret=os.environ['access_key_secret']
-    #     ),
-    #     region='cn-north-1')
-
     demo_client = client.Client(
         auth_url='https://iam.cn-north-1.myhwclouds.com:443/v3',
-        credential=credential.PasswordCredential(
-            username=os.environ['username'],
-            password=os.environ['password'],
-            domain=os.environ['domain'],
-            project='cn-north-1'
+        credential=credential.AccessKeyCredential(
+            access_key_id=os.environ['access_key_id'],
+            access_key_secret=os.environ['access_key_secret']
         ),
         region='cn-north-1')
+
+    # demo_client = client.Client(
+    #     auth_url='https://iam.cn-north-1.myhwclouds.com:443/v3',
+    #     credential=credential.PasswordCredential(
+    #         username=os.environ['username'],
+    #         password=os.environ['password'],
+    #         domain=os.environ['domain'],
+    #         project='cn-north-1'
+    #     ),
+    #     region='cn-north-1')
 
     try:
         # Create a volume
@@ -133,8 +167,8 @@ if __name__ == "__main__":
 
         # Show volume detail
         while volume_obj['volume']['status'] != 'available':
-            code, volume, headers = demo_client.handle_request(req=
-            ShowVolumeRequest(volume_obj['volume']['id']))
+            code, volume, headers = demo_client.handle_request(
+                req=ShowVolumeRequest(volume_obj['volume']['id']))
             print(volume)
             time.sleep(1)
             volume_obj = json.loads(volume)
@@ -145,6 +179,21 @@ if __name__ == "__main__":
 
         # Or, show servers without constructing a request object.
         print(demo_client.handle_raw_request('nova', 'GET', '/servers'))
+
+        # Create a meta image
+        code, image, headers = demo_client.handle_request(CreateImageRequest(
+            name="created_from_huawei_sdk_core"))
+        print(image)
+        image = json.loads(image)
+        # Upload a image content
+        file_path = "PLEASE REPLACE WITH REAL PATH"
+        with open(file_path, "r") as file:
+            file_content = file.read()
+            upload_image = UploadImageRequest(
+                image['id'],
+                file_content)
+            result = demo_client.handle_request(upload_image)
+            print(result)
     except exception.SDKException as err:
         print(err)
 
