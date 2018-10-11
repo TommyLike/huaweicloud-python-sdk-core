@@ -39,7 +39,8 @@ class PwdAuthenticator(Authenticator):
         self.domain = credential.domain
         self.project = credential.project
         self.auth_url = auth_url
-        self.handler = urllib3_handler.RequestHandler.get_instance()
+        self.handler = urllib3_handler.RequestHandler.get_instance(
+            credential.ssl_verification)
         self._auth_token_cache = None
         super(PwdAuthenticator, self).__init__(
             ssl=credential.ssl_verification)

@@ -17,7 +17,7 @@ import json
 import multiprocessing
 import ssl
 
-from huaweipythonsdkcore import exception
+import certifi
 import six
 from six.moves.urllib.parse import urlencode
 import urllib3
@@ -32,14 +32,28 @@ class RequestHandler(object):
 
     def __init__(self, ssl_verification=None):
 
-        if ssl_verification is None:
+        cert_reqs = ssl.CERT_NONE
+        if isinstance(ssl_verification, dict) and ssl_verification.get(
+                'verify_ssl'):
+            cert_reqs = ssl.CERT_REQUIRED
+        if cert_reqs == ssl.CERT_NONE:
             self.pool_manager = urllib3.PoolManager(
                 num_pools=self._Pool_Size,
-                cert_reqs=ssl.CERT_NONE,
+                cert_reqs=cert_reqs,
                 retries=retry.Retry(connect=self._Max_Retry))
             urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
         else:
-            raise exception.SDKException("SSL/TLS is not supported.")
+            if ssl_verification.get('ca_certs') and isinstance(
+                    ssl_verification.get('ca_certs'), list):
+                ca_certs = ssl_verification.get('ca_certs')
+            else:
+                # if not set certificate file, use Mozilla's root certificates.
+                ca_certs = certifi.where()
+            self.pool_manager = urllib3.PoolManager(
+                num_pools=self._Pool_Size,
+                cert_reqs=cert_reqs,
+                ca_certs=ca_certs,
+                retries=retry.Retry(connect=self._Max_Retry))
 
     @classmethod
     def get_instance(cls, ssl_verification=None):

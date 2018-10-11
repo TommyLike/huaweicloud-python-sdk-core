@@ -21,9 +21,6 @@ Install via github source code.
     $ python setup.py install
 ```
 
-**NOTE**: For Mac and python 3+ user, please install `requests[security]` as well,
-[Reference](https://github.com/requests/requests/issues/3189).
-
 # Tests
 
 Use tox to run all test tasks.
@@ -95,6 +92,16 @@ or
              project=<project> #in most of the cases it's equal to region
          ),
         region=<region-id>)
+```
+if you want to enable ssl verification, please add ``ssl_verification`` as well.
+```python
+credential=credential.PasswordCredential/AccessKeyCredential(
+             .....,
+             ssl_verification={
+                'verify_ssl': True,
+                'ca_certs': ['cert_file1', 'cert_file2'] #Optional
+                }
+         )
 ```
 ## Use client to invoke API via Request instance
 ```python
