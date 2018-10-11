@@ -133,7 +133,8 @@ if __name__ == "__main__":
         auth_url='https://iam.cn-north-1.myhwclouds.com:443/v3',
         credential=credential.AccessKeyCredential(
             access_key_id=os.environ['access_key_id'],
-            access_key_secret=os.environ['access_key_secret']
+            access_key_secret=os.environ['access_key_secret'],
+            ssl_verification={'verify_ssl': True}
         ),
         region='cn-north-1')
 
