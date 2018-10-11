@@ -58,7 +58,8 @@ class HttpEndpointResolver(EndpointResolver, base_client.BaseClient):
 
     def __init__(self, auth_url, authenticator):
         self.auth_url = auth_url
-        self.handler = urllib3_handler.RequestHandler.get_instance()
+        self.handler = urllib3_handler.RequestHandler.get_instance(
+            ssl_verification=authenticator.ssl_verification)
         self.authenticator = authenticator
         self._endpoint_cache = {}
         super(HttpEndpointResolver, self).__init__(

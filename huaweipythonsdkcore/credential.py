@@ -24,7 +24,9 @@ class Credential(object):
         pass
 
     def __init__(self, ssl_verification):
-        # TODO(tommylikehu): ssl verification is disabled currently.
+        # ssl_verification is constructed within two parameters
+        # 'verify_ssl': enable ssl verification or not
+        # 'ca_certs': certification files list
         self.ssl_verification = ssl_verification
 
 

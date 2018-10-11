@@ -13,3 +13,5 @@
 2018-10-08: Support raw request and unit tests.
 
 2018-10-10: Support 'application/octet-stream' content type.
+
+2018-10-11: Support ssl verification and specify ssl cert files.

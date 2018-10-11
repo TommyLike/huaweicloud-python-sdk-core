@@ -38,7 +38,8 @@ class Client(base_client.BaseClient):
         self.resolver = endpoint_resolver.HttpEndpointResolver(
             self.auth_url,
             self.authenticator)
-        super(Client, self).__init__(authenticator=self.authenticator)
+        super(Client, self).__init__(
+            authenticator=self.authenticator)
 
     def handle_request(self, req):
         """Perform http request with supplied Request object.

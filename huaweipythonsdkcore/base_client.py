@@ -23,7 +23,8 @@ class BaseClient(object):
 
     def __init__(self, authenticator=None):
         self.authenticator = authenticator
-        self.handler = urllib3_handler.RequestHandler.get_instance()
+        self.handler = urllib3_handler.RequestHandler.get_instance(
+            ssl_verification=authenticator.ssl_verification)
 
     def _do_request(self, req, full_path):
 
