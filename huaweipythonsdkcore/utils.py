@@ -15,6 +15,9 @@
 
 import datetime
 
+import six
+from six.moves.urllib.parse import quote
+from six.moves.urllib.parse import urlencode
 from six.moves.urllib import parse
 from huaweipythonsdkcore import request
 from huaweipythonsdkcore import exception
@@ -72,3 +75,14 @@ def build_request_object(service, method, path, headers=None,
                                method=method.upper(),
                                endpoint=path,
                                timeout=timeout)
+
+
+def encode_parameters(paramters):
+    if six.PY2:
+        result = urlencode(paramters)
+        # NOTE: Since python 2 doesn't support quota_via parameter
+        # we hard code the special characters here.
+        result = result.replace("+", "%20")
+    else:
+        result = urlencode(paramters, quota_via=quote)
+    return result

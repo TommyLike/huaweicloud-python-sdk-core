@@ -19,7 +19,7 @@ import ssl
 
 import certifi
 import six
-from six.moves.urllib.parse import urlencode
+from huaweipythonsdkcore import utils
 import urllib3
 from urllib3.util import retry
 
@@ -69,25 +69,18 @@ class RequestHandler(object):
         if 'Content-Type' not in headers:
             headers['Content-Type'] = 'application/json'
 
-        if method in ['POST', 'PUT', 'PATCH', 'OPTIONS', 'DELETE']:
-            if body:
-                if isinstance(body, dict):
-                    body = json.dumps(body)
-            if url_params:
-                path += '?' + urlencode(url_params)
-            result = self.pool_manager.request(
-                method, path,
-                body=body,
-                preload_content=True,
-                timeout=timeout,
-                headers=headers)
-        else:
-            result = self.pool_manager.request(
-                method, path,
-                fields=url_params,
-                preload_content=True,
-                timeout=timeout,
-                headers=headers)
+        if body:
+            if isinstance(body, dict):
+                body = json.dumps(body)
+        if url_params:
+            path += '?' + utils.encode_parameters(url_params)
+
+        result = self.pool_manager.request(
+            method, path,
+            body=body,
+            preload_content=True,
+            timeout=timeout,
+            headers=headers)
 
         body = result.data
         # In the python 3, the response.data is bytes.
