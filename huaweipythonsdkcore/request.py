@@ -63,11 +63,13 @@ class BaseRequest(object):
             self._base_endpoint if endpoint is None else endpoint
         self._timeout = timeout
 
-        if [item for item in [
-                self._headers, self._url_params] if not isinstance(
-                item, dict)]:
+        if not isinstance(self._headers, dict):
             raise exception.ValueException(
-                "'header', 'url_params' and  should be dictionary.")
+                "'header' should be dictionary.")
+
+        if not isinstance(self.url_params, (dict, list)):
+            raise exception.ValueException(
+                "'url_params' should be dictionary or list.")
 
         if not isinstance(self._body, (six.binary_type, dict, str)):
             raise exception.ValueException(

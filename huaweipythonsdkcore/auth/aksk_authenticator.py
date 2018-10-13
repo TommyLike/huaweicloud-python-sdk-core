@@ -17,7 +17,6 @@ import hashlib
 import json
 
 import six
-from six.moves.urllib.parse import urlencode
 from huaweipythonsdkcore.auth.authenticator import Authenticator
 from huaweipythonsdkcore.auth import digester
 from huaweipythonsdkcore.auth import utils as sign_util
@@ -67,7 +66,9 @@ class AKSKAuthenticator(Authenticator):
         canonical_uri = uri if uri.endswith('/') else uri + '/'
         if params:
             result = []
-            for k, vs in list(params.items()):
+            if isinstance(params, dict):
+                params = params.items()
+            for k, vs in params:
                 if (isinstance(vs, six.string_types) or
                         not hasattr(vs, '__iter__')):
                     vs = [vs]
@@ -76,8 +77,8 @@ class AKSKAuthenticator(Authenticator):
                         result.append(
                             (k.encode('utf-8') if isinstance(k, str) else k,
                              v.encode('utf-8') if isinstance(v, str) else v))
-            result.sort(key=lambda item: item[0])
-            canonical_querystring = urlencode(result, doseq=True)
+            result.sort(key=lambda item: (item[0], item[1]))
+            canonical_querystring = utils.encode_parameters(result)
         else:
             canonical_querystring = ''
         canonical_header = [
