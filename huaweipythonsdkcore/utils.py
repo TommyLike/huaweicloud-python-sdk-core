@@ -78,6 +78,9 @@ def build_request_object(service, method, path, headers=None,
 
 
 def encode_parameters(paramters):
+    # NOTE(tommylikehu): both '%20' and '+' are valid encode values for ''
+    # but we need to convert it into '%20', since it's '%20' at the
+    # server side.
     if six.PY2:
         result = urlencode(paramters)
         # NOTE: Since python 2 doesn't support quota_via parameter

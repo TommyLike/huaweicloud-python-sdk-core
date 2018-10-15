@@ -1,6 +1,7 @@
 tox
 flake8
 testtools
+mock
 setuptools>=38.0.0
 ddt
 -rrequirements.txt
