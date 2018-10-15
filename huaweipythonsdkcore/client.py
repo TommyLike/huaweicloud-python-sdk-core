@@ -24,21 +24,25 @@ from huaweipythonsdkcore import base_client
 class Client(base_client.BaseClient):
 
     def __init__(self, auth_url=None, credential=None, region=None,
-                 tenant=None, configuration=None):
+                 tenant=None, configuration=None, **kwargs):
         self.auth_url = auth_url
         self.credential = credential
         self.region = region
         # NOTE(tommylikehu): In most of the cases, the tenant would be equal
         # to region, therefore, we set it to region if parameter not provided.
         self.tenant = tenant if tenant else region
-        self.authenticator = auth_util.get_authenticator(
-            cred=credential,
-            region=region,
-            auth_url=self.auth_url)
-        self.resolver = endpoint_resolver.HttpEndpointResolver(
-            self.auth_url,
-            self.authenticator,
-            configuration=configuration)
+        self.authenticator = kwargs.get('authenticator', None)
+        if self.authenticator is None:
+            self.authenticator = auth_util.get_authenticator(
+                cred=credential,
+                region=region,
+                auth_url=self.auth_url)
+        self.resolver = kwargs.get('resolver', None)
+        if self.resolver is None:
+            self.resolver = endpoint_resolver.HttpEndpointResolver(
+                self.auth_url,
+                self.authenticator,
+                configuration=configuration)
         super(Client, self).__init__(
             authenticator=self.authenticator, configuration=configuration)
 
