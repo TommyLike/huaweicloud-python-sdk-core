@@ -17,7 +17,6 @@ import json
 from abc import ABCMeta, abstractmethod
 
 from huaweipythonsdkcore import request
-from huaweipythonsdkcore import urllib3_handler
 from huaweipythonsdkcore import utils
 from huaweipythonsdkcore import exception
 from huaweipythonsdkcore import base_client
@@ -56,14 +55,12 @@ class HttpEndpointResolver(EndpointResolver, base_client.BaseClient):
 
     TENANT_REGEX = '$(tenant_id)s'
 
-    def __init__(self, auth_url, authenticator):
+    def __init__(self, auth_url, authenticator, configuration=None):
         self.auth_url = auth_url
-        self.handler = urllib3_handler.RequestHandler.get_instance(
-            ssl_verification=authenticator.ssl_verification)
         self.authenticator = authenticator
         self._endpoint_cache = {}
         super(HttpEndpointResolver, self).__init__(
-            authenticator=self.authenticator)
+            authenticator=self.authenticator, configuration=configuration)
 
     def _assemble_endpoint_with_tenant(self, tenant, endpoint):
         project_request = ProjectRequest()

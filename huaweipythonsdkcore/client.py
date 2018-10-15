@@ -24,7 +24,7 @@ from huaweipythonsdkcore import base_client
 class Client(base_client.BaseClient):
 
     def __init__(self, auth_url=None, credential=None, region=None,
-                 tenant=None):
+                 tenant=None, configuration=None):
         self.auth_url = auth_url
         self.credential = credential
         self.region = region
@@ -37,9 +37,10 @@ class Client(base_client.BaseClient):
             auth_url=self.auth_url)
         self.resolver = endpoint_resolver.HttpEndpointResolver(
             self.auth_url,
-            self.authenticator)
+            self.authenticator,
+            configuration=configuration)
         super(Client, self).__init__(
-            authenticator=self.authenticator)
+            authenticator=self.authenticator, configuration=configuration)
 
     def handle_request(self, req):
         """Perform http request with supplied Request object.

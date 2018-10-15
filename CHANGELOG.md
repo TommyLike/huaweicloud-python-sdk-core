@@ -15,3 +15,5 @@
 2018-10-10: Support 'application/octet-stream' content type.
 
 2018-10-11: Support ssl verification and specify ssl cert files.
+
+2018-10-15: Add 'Configuration' support.

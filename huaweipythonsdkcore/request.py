@@ -33,7 +33,7 @@ class BaseRequest(object):
     _http_method = 'GET'
 
     # Request timeout of seconds.
-    _timeout = 30
+    _timeout = None
 
     # Request content type
     _content_type = 'application/json'

@@ -21,10 +21,10 @@ from huaweipythonsdkcore import utils
 
 class BaseClient(object):
 
-    def __init__(self, authenticator=None):
+    def __init__(self, authenticator=None, configuration=None):
         self.authenticator = authenticator
         self.handler = urllib3_handler.RequestHandler.get_instance(
-            ssl_verification=authenticator.ssl_verification)
+            configuration=configuration)
 
     def _do_request(self, req, full_path):
 

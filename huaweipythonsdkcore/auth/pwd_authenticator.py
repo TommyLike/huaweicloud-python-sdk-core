@@ -33,17 +33,15 @@ class PwdAuthenticator(Authenticator):
     AUTH_HEADER = 'X-Subject-Token'
     _re_auth = True
 
-    def __init__(self, credential, auth_url=None):
+    def __init__(self, credential, auth_url=None, configuration=None):
         self.username = credential.username
         self.password = credential.password
         self.domain = credential.domain
         self.project = credential.project
         self.auth_url = auth_url
         self.handler = urllib3_handler.RequestHandler.get_instance(
-            credential.ssl_verification)
+            configuration=configuration)
         self._auth_token_cache = None
-        super(PwdAuthenticator, self).__init__(
-            ssl=credential.ssl_verification)
 
     @property
     def auth_content(self):

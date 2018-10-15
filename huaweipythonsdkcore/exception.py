@@ -65,3 +65,10 @@ class AuthException(SDKException):
                   "information {}, message: {}.".format(credential, message)
         super(AuthException, self).__init__(code=None,
                                             message=message)
+
+
+class InvalidConfigException(SDKException):
+
+    def __init__(self, message):
+        message = "Invalid configurations: {}.".format(message)
+        super(SDKException, self).__init__(code=None, message=message)

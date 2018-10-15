@@ -18,7 +18,7 @@ from huaweipythonsdkcore.auth import aksk_authenticator
 from huaweipythonsdkcore.auth import pwd_authenticator
 
 
-def get_authenticator(cred, region, auth_url):
+def get_authenticator(cred, region, auth_url, configuration=None):
 
     if isinstance(cred, credential.AccessKeyCredential):
         return aksk_authenticator.AKSKAuthenticator(
@@ -26,7 +26,8 @@ def get_authenticator(cred, region, auth_url):
             region=region)
     elif isinstance(cred, credential.PasswordCredential):
         return pwd_authenticator.PwdAuthenticator(cred,
-                                                  auth_url=auth_url)
+                                                  auth_url=auth_url,
+                                                  configuration=configuration)
 
     else:
         raise Exception("Unrecognized credential type: %s." % cred.__class__)

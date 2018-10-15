@@ -2,6 +2,7 @@ import os
 import json
 import time
 
+from huaweipythonsdkcore import configuration
 from huaweipythonsdkcore import request
 from huaweipythonsdkcore import credential
 from huaweipythonsdkcore import client
@@ -134,9 +135,10 @@ if __name__ == "__main__":
         credential=credential.AccessKeyCredential(
             access_key_id=os.environ['access_key_id'],
             access_key_secret=os.environ['access_key_secret'],
-            ssl_verification={'verify_ssl': True}
         ),
-        region='cn-north-1')
+        region='cn-north-1',
+        configuration=configuration.Configuration(**{
+            'verify_ssl': True}))
 
     # demo_client = client.Client(
     #     auth_url='https://iam.cn-north-1.myhwclouds.com:443/v3',
