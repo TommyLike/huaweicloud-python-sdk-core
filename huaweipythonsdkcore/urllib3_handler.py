@@ -14,7 +14,6 @@
 #    under the License.
 
 import json
-import multiprocessing
 import ssl
 
 import certifi
@@ -22,49 +21,54 @@ import six
 from huaweipythonsdkcore import utils
 import urllib3
 from urllib3.util import retry
+from huaweipythonsdkcore import configuration as con
+from huaweipythonsdkcore import exception
 
 
 class RequestHandler(object):
 
     _Instance = None
-    _Pool_Size = multiprocessing.cpu_count() * 5
-    _Max_Retry = 3
 
-    def __init__(self, ssl_verification=None):
+    def __init__(self, configuration=None):
+
+        if configuration is None:
+            configuration = con.Configuration()
+        if not isinstance(configuration, con.Configuration):
+            raise exception.InvalidConfigException(
+                "configuration object is not an instance of Configuration.")
 
         cert_reqs = ssl.CERT_NONE
-        if isinstance(ssl_verification, dict) and ssl_verification.get(
-                'verify_ssl'):
+        if configuration.verify_ssl:
             cert_reqs = ssl.CERT_REQUIRED
         if cert_reqs == ssl.CERT_NONE:
             self.pool_manager = urllib3.PoolManager(
-                num_pools=self._Pool_Size,
+                num_pools=configuration.pool_size,
                 cert_reqs=cert_reqs,
-                retries=retry.Retry(connect=self._Max_Retry))
+                retries=retry.Retry(connect=configuration.retries),
+                timeout=configuration.timeout)
             urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
         else:
-            if ssl_verification.get('ca_certs') and isinstance(
-                    ssl_verification.get('ca_certs'), list):
-                ca_certs = ssl_verification.get('ca_certs')
+            if configuration.ca_certs:
+                ca_certs = configuration.ca_certs
             else:
                 # if not set certificate file, use Mozilla's root certificates.
                 ca_certs = certifi.where()
             self.pool_manager = urllib3.PoolManager(
-                num_pools=self._Pool_Size,
+                num_pools=configuration.pool_size,
                 cert_reqs=cert_reqs,
                 ca_certs=ca_certs,
-                retries=retry.Retry(connect=self._Max_Retry))
+                retries=retry.Retry(connect=configuration.retries),
+                timeout=configuration.timeout)
 
     @classmethod
-    def get_instance(cls, ssl_verification=None):
+    def get_instance(cls, configuration=None):
         if RequestHandler._Instance is None:
-            RequestHandler._Instance = RequestHandler(ssl_verification)
+            RequestHandler._Instance = RequestHandler(configuration)
         return RequestHandler._Instance
 
     def handle_request(self, path, method, headers, url_params, body,
                        timeout=None):
         method = method.upper()
-        timeout = urllib3.Timeout(total=timeout)
 
         if 'Content-Type' not in headers:
             headers['Content-Type'] = 'application/json'
@@ -74,13 +78,17 @@ class RequestHandler(object):
                 body = json.dumps(body)
         if url_params:
             path += '?' + utils.encode_parameters(url_params)
+        request_param = {
+            'method': method,
+            'url': path,
+            'body': body,
+            'preload_content': True,
+            'headers': headers
+        }
+        if timeout is not None:
+            request_param['timeout'] = timeout
 
-        result = self.pool_manager.request(
-            method, path,
-            body=body,
-            preload_content=True,
-            timeout=timeout,
-            headers=headers)
+        result = self.pool_manager.request(**request_param)
 
         body = result.data
         # In the python 3, the response.data is bytes.

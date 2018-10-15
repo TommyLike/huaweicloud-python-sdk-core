@@ -37,8 +37,7 @@ class AKSKAuthenticator(Authenticator):
         self.region = region
         self.headtosign = ['Host', 'X-Sdk-Date']
         self.digester = digester.Sha256()
-        super(AKSKAuthenticator, self).__init__(
-            ssl=credential.ssl_verification)
+        super(AKSKAuthenticator, self).__init__()
 
     def _make_canonical_request(self, method=None, url=None, headers=None,
                                 params=None, body=None):

@@ -93,15 +93,19 @@ or
          ),
         region=<region-id>)
 ```
-if you want to enable ssl verification, please add ``ssl_verification`` as well.
+if you want to enable ssl verification, customize request pool size, timeout and other settings,
+please use `Configuration` object.
 ```python
-credential=credential.PasswordCredential/AccessKeyCredential(
-             .....,
-             ssl_verification={
-                'verify_ssl': True,
-                'ca_certs': ['cert_file1', 'cert_file2'] #Optional
-                }
-         )
+from huaweipythonsdkcore import configuration
+
+client=client.Client(
+        .....,
+        configuration.Configuration(
+            verify_ssl=True,
+            ca_certs=['ca_file_1', 'ca_file_2'],
+            retries=4,
+            ......
+            ))
 ```
 ## Use client to invoke API via Request instance
 ```python
