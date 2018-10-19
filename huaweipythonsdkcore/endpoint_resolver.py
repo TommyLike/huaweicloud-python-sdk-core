@@ -78,7 +78,7 @@ class HttpEndpointResolver(EndpointResolver, base_client.BaseClient):
         _, result, _ = self._do_request(service_request, full_path)
         services = json.loads(result)
         service = [sv['id'] for sv in services['services']
-                   if sv['name'] == req.service]
+                   if sv['type'] == req.service]
         if len(service) == 0:
             raise exception.EndpointResolveException(
                 "Can't find service identified with name %s." % req.service)

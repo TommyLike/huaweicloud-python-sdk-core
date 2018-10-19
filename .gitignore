@@ -6,3 +6,4 @@ dist/*
 *_sample.py
 .stestr/*
 .interpreter/*
+build/*
