@@ -181,7 +181,7 @@ if __name__ == "__main__":
             volume_obj['volume']['id'])))
 
         # Or, show servers without constructing a request object.
-        print(demo_client.handle_raw_request('nova', 'GET', '/servers'))
+        print(demo_client.handle_raw_request('compute', 'GET', '/servers'))
 
         # Create a meta image
         code, image, headers = demo_client.handle_request(CreateImageRequest(
