@@ -81,6 +81,11 @@ def encode_parameters(paramters):
     # NOTE(tommylikehu): both '%20' and '+' are valid encode values for ''
     # but we need to convert it into '%20', since it's '%20' at the
     # server side.
+    if not isinstance(paramters, (dict, list)):
+        raise exception.ValueException("url parameters should be dict or list")
+    if isinstance(paramters, dict):
+        paramters = paramters.items()
+    paramters.sort(key=lambda item: (item[0], item[1]))
     if six.PY2:
         result = urlencode(paramters)
         # NOTE: Since python 2 doesn't support quota_via parameter
