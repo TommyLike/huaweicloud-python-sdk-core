@@ -1,5 +1,5 @@
 ============================
-Huawei Cloud Python SDK Core
+Huawei Cloud Python SDK Core2
 ============================
 
 This is the base library for HuaweiCloud python SDK, it provides the
